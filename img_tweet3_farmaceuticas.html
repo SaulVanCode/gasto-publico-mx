@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Source+Sans+3:wght@400;600;700;900&family=JetBrains+Mono:wght@400;700&display=swap');
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  width: 1200px; height: 675px;
+  background: #06060b;
+  color: #e8e6e3;
+  font-family: 'Source Sans 3', sans-serif;
+  padding: 48px 72px;
+  overflow: hidden;
+  position: relative;
+}
+.label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: #e63946;
+  margin-bottom: 12px;
+}
+h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 32px;
+  font-weight: 900;
+  margin-bottom: 28px;
+  line-height: 1.15;
+}
+h1 span { color: #e63946; }
+.chart { display: flex; flex-direction: column; gap: 6px; }
+.row {
+  display: grid;
+  grid-template-columns: 210px 1fr 130px;
+  align-items: center;
+  gap: 14px;
+  height: 36px;
+}
+.name {
+  font-weight: 700;
+  font-size: 15px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.track {
+  height: 30px;
+  background: #111119;
+  border-radius: 4px;
+  overflow: hidden;
+}
+.fill {
+  height: 100%;
+  background: linear-gradient(90deg, #9b1b24, #e63946);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  padding-left: 10px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  font-weight: 700;
+  color: #fff;
+  white-space: nowrap;
+}
+.meta {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: #7a7a8c;
+  text-align: right;
+}
+.note {
+  position: absolute;
+  bottom: 24px;
+  left: 72px;
+  right: 72px;
+  font-size: 13px;
+  color: #4a4a5c;
+  font-style: italic;
+}
+</style>
+</head>
+<body>
+<div class="label">Top 10 por adjudicacion directa</div>
+<h1>Todos son <span>farmaceuticas</span></h1>
+<div class="chart">
+  <div class="row"><div class="name">Boehringer Ingelheim</div><div class="track"><div class="fill" style="width:100%">$8,495M</div></div><div class="meta">116 ctos · 100%</div></div>
+  <div class="row"><div class="name">Roche</div><div class="track"><div class="fill" style="width:95%">$8,083M</div></div><div class="meta">33 ctos · 100%</div></div>
+  <div class="row"><div class="name">Gilead Sciences</div><div class="track"><div class="fill" style="width:63%">$5,323M</div></div><div class="meta">19 ctos · 100%</div></div>
+  <div class="row"><div class="name">Merck Sharp & Dohme</div><div class="track"><div class="fill" style="width:37%">$3,106M</div></div><div class="meta">49 ctos · 100%</div></div>
+  <div class="row"><div class="name">Janssen-Cilag</div><div class="track"><div class="fill" style="width:36%">$3,022M</div></div><div class="meta">58 ctos · 100%</div></div>
+  <div class="row"><div class="name">Pfizer</div><div class="track"><div class="fill" style="width:34%">$2,894M</div></div><div class="meta">127 ctos · 94%</div></div>
+  <div class="row"><div class="name">Eli Lilly</div><div class="track"><div class="fill" style="width:30%">$2,585M</div></div><div class="meta">26 ctos · 100%</div></div>
+  <div class="row"><div class="name">Octapharma</div><div class="track"><div class="fill" style="width:16%">$1,330M</div></div><div class="meta">23 ctos · 100%</div></div>
+  <div class="row"><div class="name">Chiesi</div><div class="track"><div class="fill" style="width:13%">$1,127M</div></div><div class="meta">40 ctos · 100%</div></div>
+  <div class="row"><div class="name">CSL Behring</div><div class="track"><div class="fill" style="width:13%">$1,086M</div></div><div class="meta">70 ctos · 97%</div></div>
+</div>
+<div class="note">Justificacion legal: "patentes, licencias, oferente unico" (Art. 41 LAASSP) &middot; Fuente: CompraNet 2025</div>
+</body>
+</html>

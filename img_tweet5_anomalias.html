@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Source+Sans+3:wght@400;600;700;900&family=JetBrains+Mono:wght@400;700&display=swap');
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  width: 1200px; height: 675px;
+  background: #06060b;
+  color: #e8e6e3;
+  font-family: 'Source Sans 3', sans-serif;
+  padding: 52px 72px;
+  overflow: hidden;
+  position: relative;
+}
+.top-row {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  margin-bottom: 36px;
+}
+.big-num {
+  font-family: 'Playfair Display', serif;
+  font-size: 72px;
+  font-weight: 900;
+  color: #e63946;
+  line-height: 1;
+}
+.big-label {
+  font-size: 22px;
+  color: #7a7a8c;
+}
+.cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.card {
+  background: #0d0d14;
+  border: 1px solid #1a1a2e;
+  border-radius: 10px;
+  padding: 24px;
+  border-top: 3px solid #e63946;
+}
+.card-icon { font-size: 28px; margin-bottom: 10px; }
+.card-title { font-weight: 700; font-size: 17px; margin-bottom: 6px; }
+.card-nums {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  color: #f0a500;
+  margin-bottom: 8px;
+}
+.card-desc { font-size: 13px; color: #7a7a8c; line-height: 1.45; }
+.bottom-cards {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+.micro-highlight {
+  background: #0d0d14;
+  border: 1px solid #1a1a2e;
+  border-radius: 10px;
+  padding: 20px 24px;
+  border-left: 4px solid #f4845f;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.micro-badge {
+  background: #f4845f;
+  color: #000;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+.micro-text { font-size: 15px; }
+.micro-text strong { color: #f4845f; }
+.footer {
+  position: absolute;
+  bottom: 20px;
+  right: 40px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: #4a4a5c;
+}
+</style>
+</head>
+<body>
+<div class="top-row">
+  <div class="big-num">612</div>
+  <div class="big-label">anomalias detectadas por analisis algoritmico</div>
+</div>
+<div class="cards">
+  <div class="card">
+    <div class="card-icon">&#9888;&#65039;</div>
+    <div class="card-title">Fragmentacion</div>
+    <div class="card-nums">200 casos &middot; $1,500M</div>
+    <div class="card-desc">Contratos divididos para quedar bajo el umbral de licitacion</div>
+  </div>
+  <div class="card">
+    <div class="card-icon">&#10060;</div>
+    <div class="card-title">Adj. directa excesiva</div>
+    <div class="card-nums">200 casos &middot; $65,700M</div>
+    <div class="card-desc">Proveedores con +90% de contratos sin competencia</div>
+  </div>
+  <div class="card">
+    <div class="card-icon">&#128123;</div>
+    <div class="card-title">Proveedores fantasma</div>
+    <div class="card-nums">100 casos &middot; $11,900M</div>
+    <div class="card-desc">1-2 contratos, todo directo, montos millonarios</div>
+  </div>
+</div>
+<div class="bottom-cards">
+  <div class="micro-highlight">
+    <div class="micro-badge">MICRO</div>
+    <div class="micro-text">Comercializadora de Seguridad: <strong>$4,342M</strong> con CONAGUA</div>
+  </div>
+  <div class="micro-highlight">
+    <div class="micro-badge">MICRO</div>
+    <div class="micro-text">Ingentec Constructora: <strong>$727M</strong> adj. directa emergencia</div>
+  </div>
+</div>
+<div class="footer">Deteccion automatica: z-score, frecuencia, concentracion &middot; CompraNet 2025</div>
+</body>
+</html>

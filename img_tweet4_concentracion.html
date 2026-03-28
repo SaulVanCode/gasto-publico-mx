@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Source+Sans+3:wght@400;600;700;900&family=JetBrains+Mono:wght@400;700&display=swap');
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  width: 1200px; height: 675px;
+  background: #06060b;
+  color: #e8e6e3;
+  font-family: 'Source Sans 3', sans-serif;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  position: relative;
+}
+body::before {
+  content: '';
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, rgba(240,165,0,0.06) 0%, transparent 70%);
+}
+.label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: #f0a500;
+  margin-bottom: 20px;
+}
+h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 44px;
+  font-weight: 900;
+  margin-bottom: 48px;
+  text-align: center;
+  line-height: 1.15;
+}
+h1 span { color: #f0a500; }
+.pyramid {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 40px;
+}
+.pyr {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 64px;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 20px;
+  color: #fff;
+}
+.p1 { width: 280px; background: linear-gradient(135deg, #e63946, #c1121f); }
+.p2 { width: 460px; background: linear-gradient(135deg, #f4845f, #e85d04); }
+.p3 { width: 640px; background: linear-gradient(135deg, #f0a500, #b07800); color: #000; }
+.p4 {
+  width: 820px;
+  background: #111119;
+  border: 1px solid #1a1a2e;
+  color: #7a7a8c;
+  font-size: 17px;
+}
+.pyr-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px;
+}
+.bottom-text {
+  font-size: 16px;
+  color: #7a7a8c;
+}
+.footer {
+  position: absolute;
+  bottom: 24px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: #4a4a5c;
+}
+</style>
+</head>
+<body>
+<div class="label">Concentracion del gasto</div>
+<h1><span>500</span> empresas se llevan el <span>80%</span></h1>
+<div class="pyramid">
+  <div class="pyr p1"><span class="pyr-label">Top 20 &rarr; 25.9%</span></div>
+  <div class="pyr p2"><span class="pyr-label">Top 100 &rarr; 53.5%</span></div>
+  <div class="pyr p3"><span class="pyr-label">Top 500 &rarr; 79.9%</span></div>
+  <div class="pyr p4"><span class="pyr-label">30,703 proveedores totales &rarr; 100%</span></div>
+</div>
+<div class="bottom-text">Los otros 30,203 proveedores se reparten el 20% restante</div>
+<div class="footer">Fuente: CompraNet 2025 &middot; $707.8 mil millones MXN</div>
+</body>
+</html>

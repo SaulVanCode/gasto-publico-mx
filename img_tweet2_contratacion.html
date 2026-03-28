@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Source+Sans+3:wght@400;600;700;900&family=JetBrains+Mono:wght@400;700&display=swap');
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  width: 1200px; height: 675px;
+  background: #06060b;
+  color: #e8e6e3;
+  font-family: 'Source Sans 3', sans-serif;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 60px 80px;
+  overflow: hidden;
+  position: relative;
+}
+body::before {
+  content: '';
+  position: absolute;
+  top: -100px; right: -100px;
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(230,57,70,0.08) 0%, transparent 70%);
+  pointer-events: none;
+}
+.label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: #e63946;
+  margin-bottom: 16px;
+}
+h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 42px;
+  font-weight: 900;
+  line-height: 1.15;
+  margin-bottom: 40px;
+}
+h1 span { color: #e63946; }
+.bar-wrap { margin-bottom: 32px; }
+.bar {
+  display: flex;
+  height: 64px;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+.bar > div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 18px;
+  color: #fff;
+}
+.s1 { flex: 53.9; background: #0096c7; }
+.s2 { flex: 41.5; background: #e63946; }
+.s3 { flex: 5.7; background: #b07800; font-size: 13px; }
+.legend {
+  display: flex;
+  gap: 40px;
+  font-size: 17px;
+}
+.legend > div { display: flex; align-items: center; gap: 10px; }
+.dot { width: 16px; height: 16px; border-radius: 4px; }
+.amount {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+  font-size: 15px;
+  color: #7a7a8c;
+}
+.callout {
+  background: rgba(230,57,70,0.12);
+  border-left: 5px solid #e63946;
+  padding: 20px 28px;
+  border-radius: 0 8px 8px 0;
+  font-size: 22px;
+  font-weight: 700;
+  color: #e63946;
+  margin-top: 12px;
+}
+.footer {
+  position: absolute;
+  bottom: 24px;
+  right: 40px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: #4a4a5c;
+}
+</style>
+</head>
+<body>
+<div class="label">Gasto publico Mexico 2025</div>
+<h1>Como se contrata: <span>41.5% sin competencia</span></h1>
+<div class="bar-wrap">
+  <div class="bar">
+    <div class="s1">53.9%</div>
+    <div class="s2">41.5%</div>
+    <div class="s3">5.7%</div>
+  </div>
+  <div class="legend">
+    <div><div class="dot" style="background:#0096c7"></div> Licitacion publica <span class="amount">$381 mmd</span></div>
+    <div><div class="dot" style="background:#e63946"></div> Adj. directa <span class="amount">$294 mmd</span></div>
+    <div><div class="dot" style="background:#b07800"></div> Invitacion 3+ <span class="amount">$40 mmd</span></div>
+  </div>
+</div>
+<div class="callout">$293,907 millones asignados a dedo en 2025</div>
+<div class="footer">Fuente: CompraNet 2025 &middot; 91,850 contratos</div>
+</body>
+</html>
