@@ -65,8 +65,9 @@ def download_pef(
 
     console.print(f"  Descargando [bold]{filename}[/bold] ...")
 
+    # Sitios .gob.mx frecuentemente tienen certificados SSL problemáticos
     try:
-        with httpx.stream("GET", url, timeout=timeout, follow_redirects=True) as r:
+        with httpx.stream("GET", url, timeout=timeout, follow_redirects=True, verify=False) as r:
             if r.status_code == 404:
                 console.print(f"  [yellow]No disponible: {filename}[/yellow]")
                 return None

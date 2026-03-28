@@ -2,14 +2,14 @@
 CLI principal: gasto-publico-mx
 
 Uso:
-    gasto crawl pef [--year 2025] [--force]
-    gasto crawl compranet [--year 2025] [--type contratos]
-    gasto crawl cdmx [--force]
-    gasto crawl ocds [--year 2024]
-    gasto crawl all [--force]
-    gasto search <query>         # busca datasets en datos.gob.mx
-    gasto db migrate             # ejecuta migraciones SQL
-    gasto stats                  # resumen de datos descargados
+    gasto crawl pef/compranet/cdmx/ocds/all
+    gasto load pef/compranet/cdmx/all
+    gasto analyze                    # detecta anomalías
+    gasto report                     # reporte de anomalías
+    gasto flow                       # flujo PEF → contratos
+    gasto search <query>             # busca en datos.gob.mx
+    gasto db migrate                 # crea tablas
+    gasto stats                      # resumen de datos
 """
 
 from __future__ import annotations
@@ -40,9 +40,9 @@ def crawl():
 
 
 @crawl.command("pef")
-@click.option("--year", "-y", type=int, default=None, help="Año específico (default: todos)")
+@click.option("--year", "-y", type=int, default=None)
 @click.option("--type", "dataset_type", type=click.Choice(["pef", "ppef"]), default="pef")
-@click.option("--force", is_flag=True, help="Re-descargar aunque ya exista")
+@click.option("--force", is_flag=True)
 def crawl_pef(year, dataset_type, force):
     """Descarga PEF de Transparencia Presupuestaria."""
     from src.crawlers.transparencia import crawl_all, download_pef
@@ -103,8 +103,96 @@ def crawl_all_sources(force):
     crawl_cn(DATA_DIR / "compranet", force=force)
     crawl_presupuesto(DATA_DIR / "cdmx", force=force)
     crawl_ocds(DATA_DIR / "ocds", force=force)
-
     console.print("\n[bold green]Descarga completa.[/bold green]")
+
+
+# ── Load ─────────────────────────────────────────────────────
+
+@cli.group()
+def load():
+    """Carga datos descargados a la base de datos."""
+    pass
+
+
+@load.command("pef")
+def load_pef_cmd():
+    """Carga CSVs de PEF a la base de datos."""
+    from src.db.connection import run_migrations
+    from src.loaders.pef_loader import load_all
+
+    run_migrations()
+    load_all(DATA_DIR / "transparencia")
+
+
+@load.command("compranet")
+def load_compranet_cmd():
+    """Carga CSVs de CompraNet a la base de datos."""
+    from src.db.connection import run_migrations
+    from src.loaders.compranet_loader import load_all
+
+    run_migrations()
+    load_all(DATA_DIR / "compranet")
+
+
+@load.command("cdmx")
+def load_cdmx_cmd():
+    """Carga CSVs de CDMX a la base de datos."""
+    from src.db.connection import run_migrations
+    from src.loaders.cdmx_loader import load_all
+
+    run_migrations()
+    load_all(DATA_DIR / "cdmx")
+
+
+@load.command("all")
+def load_all_cmd():
+    """Carga todos los datos a la base de datos."""
+    from src.db.connection import run_migrations
+    from src.loaders.pef_loader import load_all as load_pef
+    from src.loaders.compranet_loader import load_all as load_cn
+    from src.loaders.cdmx_loader import load_all as load_cdmx
+
+    run_migrations()
+    load_pef(DATA_DIR / "transparencia")
+    load_cn(DATA_DIR / "compranet")
+    load_cdmx(DATA_DIR / "cdmx")
+    console.print("\n[bold green]Carga completa.[/bold green]")
+
+
+# ── Analyze ──────────────────────────────────────────────────
+
+@cli.command("analyze")
+def analyze():
+    """Ejecuta detección de anomalías sobre los datos cargados."""
+    from src.anomalias import run_all_checks, report_anomalias
+
+    results = run_all_checks()
+    console.print()
+    report_anomalias()
+
+
+# ── Report ───────────────────────────────────────────────────
+
+@cli.command("report")
+@click.option("--limit", "-n", default=50, help="Número máximo de anomalías a mostrar")
+def report(limit):
+    """Muestra reporte de anomalías detectadas."""
+    from src.anomalias import report_anomalias
+
+    report_anomalias(limit=limit)
+
+
+# ── Flow ─────────────────────────────────────────────────────
+
+@cli.command("flow")
+def flow():
+    """Linkea y muestra flujo PEF → Contratos."""
+    from src.linkeo import linkear_por_ramo, report_flujo
+
+    console.print("[bold]Linkeando presupuesto con contratos...[/bold]")
+    linkear_por_ramo()
+    console.print()
+    report_flujo()
 
 
 # ── Search ───────────────────────────────────────────────────
@@ -127,13 +215,45 @@ def db():
 
 
 @db.command("migrate")
-@click.option("--schema-dir", default="schema", help="Directorio con archivos SQL")
-def db_migrate(schema_dir):
+def db_migrate():
     """Ejecuta migraciones SQL."""
     from src.db.connection import run_migrations
 
-    run_migrations(schema_dir)
+    run_migrations()
     console.print("[bold green]Migraciones ejecutadas.[/bold green]")
+
+
+@db.command("info")
+def db_info():
+    """Muestra info de la base de datos."""
+    from src.db.connection import get_connection, get_sqlite_path
+
+    console.print(f"DB: {get_sqlite_path()}")
+    conn = get_connection()
+
+    tables = conn.execute(
+        "SELECT name FROM sqlite_master WHERE type='table' ORDER BY name"
+    ).fetchall()
+
+    table = Table(title="Tablas en DB")
+    table.add_column("Tabla", style="cyan")
+    table.add_column("Filas", justify="right")
+    table.add_column("Tamaño aprox.", justify="right")
+
+    for t in tables:
+        name = t["name"]
+        count = conn.execute(f"SELECT COUNT(*) FROM [{name}]").fetchone()[0]
+        table.add_row(name, f"{count:,}", "")
+
+    console.print(table)
+
+    # Tamaño del archivo
+    db_path = get_sqlite_path()
+    if db_path.exists():
+        size_mb = db_path.stat().st_size / 1e6
+        console.print(f"\nTamaño total DB: {size_mb:.1f} MB")
+
+    conn.close()
 
 
 # ── Stats ────────────────────────────────────────────────────

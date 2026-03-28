@@ -1,44 +1,46 @@
-"""Conexión a PostgreSQL."""
+"""Conexión a base de datos. SQLite por default, PostgreSQL opcional."""
 
 from __future__ import annotations
 
 import os
+import sqlite3
+from pathlib import Path
 
-import psycopg
-
-
-def get_conninfo() -> str:
-    """Obtiene connection string desde env var o default local."""
-    return os.environ.get(
-        "DATABASE_URL",
-        "postgresql://gasto:gasto@localhost:5432/gasto_publico",
-    )
+DB_DIR = Path(__file__).parent.parent.parent / "data"
+DEFAULT_SQLITE = DB_DIR / "gasto_publico.db"
 
 
-def get_connection(**kwargs) -> psycopg.Connection:
-    """Crea conexión a PostgreSQL."""
-    return psycopg.connect(get_conninfo(), **kwargs)
+def get_sqlite_path() -> Path:
+    """Ruta al archivo SQLite."""
+    path = Path(os.environ.get("GASTO_DB_PATH", str(DEFAULT_SQLITE)))
+    path.parent.mkdir(parents=True, exist_ok=True)
+    return path
 
 
-def run_migrations(schema_dir: str = "schema") -> None:
-    """Ejecuta archivos SQL de schema/ en orden."""
-    from pathlib import Path
+def get_connection() -> sqlite3.Connection:
+    """Crea conexión a SQLite."""
+    conn = sqlite3.connect(str(get_sqlite_path()))
+    conn.execute("PRAGMA journal_mode=WAL")
+    conn.execute("PRAGMA foreign_keys=ON")
+    conn.execute("PRAGMA cache_size=-64000")  # 64MB cache
+    conn.row_factory = sqlite3.Row
+    return conn
 
-    schema_path = Path(schema_dir)
-    if not schema_path.exists():
-        raise FileNotFoundError(f"No existe directorio de schema: {schema_dir}")
 
-    sql_files = sorted(schema_path.glob("*.sql"))
+def run_migrations() -> None:
+    """Ejecuta schema SQL."""
+    schema_dir = Path(__file__).parent.parent.parent / "schema"
+    sql_files = sorted(schema_dir.glob("*.sql"))
     if not sql_files:
         print("No hay archivos de migración.")
         return
 
-    conn = get_connection(autocommit=True)
+    conn = get_connection()
     try:
         for f in sql_files:
             print(f"  Ejecutando {f.name} ...")
             sql = f.read_text(encoding="utf-8")
-            conn.execute(sql)
+            conn.executescript(sql)
             print(f"  [OK] {f.name}")
     finally:
         conn.close()

@@ -87,8 +87,13 @@ def crawl_presupuesto(dest_dir: Path, force: bool = False) -> list[Path]:
         if fmt not in ("csv", "xlsx", "xls", "json"):
             continue
 
+        import re
+        import unicodedata
+
         ext = fmt if fmt != "xlsx" else "xlsx"
-        safe_name = name.replace(" ", "_").replace("/", "_")
+        # Normalizar unicode y eliminar caracteres no válidos en Windows
+        safe_name = unicodedata.normalize("NFKD", name).encode("ascii", "ignore").decode()
+        safe_name = re.sub(r'[^\w\s\-.]', '_', safe_name).replace(" ", "_")
         if not safe_name.endswith(f".{ext}"):
             safe_name = f"{safe_name}.{ext}"
 
