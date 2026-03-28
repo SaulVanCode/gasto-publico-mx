@@ -1,0 +1,23 @@
+[project]
+name = "gasto-publico-mx"
+version = "0.1.0"
+description = "AI crawler para rastrear gasto público en México — del PEF a la última factura"
+requires-python = ">=3.11"
+dependencies = [
+    "httpx>=0.27",
+    "click>=8.1",
+    "psycopg[binary]>=3.1",
+    "pandas>=2.2",
+    "rich>=13.7",
+    "tqdm>=4.66",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0", "ruff>=0.4"]
+
+[project.scripts]
+gasto = "src.cli:cli"
+
+[tool.ruff]
+target-version = "py311"
+line-length = 100
