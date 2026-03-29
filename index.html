@@ -1,0 +1,1498 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Radiografía del Gasto Público en México 2025</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;600;700;900&family=JetBrains+Mono:wght@400;700&display=swap');
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg: #06060b;
+  --bg-card: #0d0d14;
+  --bg-card-alt: #111119;
+  --border: #1a1a2e;
+  --text: #e8e6e3;
+  --text-dim: #7a7a8c;
+  --text-muted: #4a4a5c;
+  --red: #e63946;
+  --red-dark: #9b1b24;
+  --red-glow: rgba(230, 57, 70, 0.15);
+  --cyan: #48cae4;
+  --cyan-dark: #0096c7;
+  --gold: #f0a500;
+  --gold-dim: #b07800;
+  --green: #52b788;
+  --orange: #f4845f;
+  --purple: #b5179e;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Source Sans 3', sans-serif;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* ── Noise overlay ── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 9999;
+}
+
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* ── HEADER ── */
+.hero {
+  padding: 80px 0 60px;
+  text-align: center;
+  position: relative;
+  border-bottom: 1px solid var(--border);
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 50%;
+  transform: translateX(-50%);
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, rgba(230,57,70,0.06) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.hero-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--red);
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.hero-label::before, .hero-label::after {
+  content: '';
+  width: 40px;
+  height: 1px;
+  background: var(--red);
+}
+
+h1 {
+  font-family: 'Playfair Display', serif;
+  font-weight: 900;
+  font-size: clamp(2.4rem, 5vw, 4rem);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  margin-bottom: 16px;
+  background: linear-gradient(135deg, var(--text) 60%, var(--text-dim));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+h1 .accent {
+  background: linear-gradient(135deg, var(--red), var(--orange));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.hero-sub {
+  font-size: 1.05rem;
+  color: var(--text-dim);
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.7;
+}
+
+.hero-sub strong {
+  color: var(--cyan);
+  font-weight: 600;
+}
+
+/* ── SECTIONS ── */
+section {
+  padding: 64px 0;
+  border-bottom: 1px solid var(--border);
+  animation: fadeUp 0.6s ease both;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.section-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--text-muted);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+h2 {
+  font-family: 'Playfair Display', serif;
+  font-weight: 700;
+  font-size: clamp(1.6rem, 3vw, 2.2rem);
+  margin-bottom: 32px;
+  line-height: 1.2;
+}
+
+h2 .hl { color: var(--red); }
+h2 .hl-cyan { color: var(--cyan); }
+h2 .hl-gold { color: var(--gold); }
+
+/* ── MACRO CARDS ── */
+.macro-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.macro-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 32px;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.3s;
+}
+
+.macro-card:hover { border-color: var(--cyan-dark); }
+
+.macro-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+}
+
+.macro-card:nth-child(1)::before { background: linear-gradient(90deg, var(--cyan), var(--cyan-dark)); }
+.macro-card:nth-child(2)::before { background: linear-gradient(90deg, var(--gold), var(--gold-dim)); }
+.macro-card:nth-child(3)::before { background: linear-gradient(90deg, var(--green), #2d6a4f); }
+
+.macro-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+}
+
+.macro-value {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.4rem;
+  font-weight: 900;
+  line-height: 1;
+  margin-bottom: 8px;
+}
+
+.macro-card:nth-child(1) .macro-value { color: var(--cyan); }
+.macro-card:nth-child(2) .macro-value { color: var(--gold); }
+.macro-card:nth-child(3) .macro-value { color: var(--green); }
+
+.macro-detail {
+  font-size: 0.85rem;
+  color: var(--text-dim);
+}
+
+/* ── STACKED BAR ── */
+.contrata-wrap { margin-top: 16px; }
+
+.stacked-bar {
+  display: flex;
+  height: 56px;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.stacked-bar .seg {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.85rem;
+  transition: flex 0.5s ease;
+  cursor: default;
+  position: relative;
+}
+
+.seg-lic { flex: 53.9; background: var(--cyan-dark); color: #fff; }
+.seg-adj { flex: 41.5; background: var(--red); color: #fff; }
+.seg-inv { flex: 5.7; background: var(--gold-dim); color: #fff; font-size: 0.7rem; }
+
+.bar-legend {
+  display: flex;
+  gap: 32px;
+  flex-wrap: wrap;
+  margin-bottom: 28px;
+}
+
+.bar-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9rem;
+}
+
+.legend-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+
+.callout-red {
+  background: var(--red-glow);
+  border: 1px solid var(--red-dark);
+  border-left: 4px solid var(--red);
+  padding: 20px 24px;
+  border-radius: 0 8px 8px 0;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--red);
+}
+
+.callout-red span {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: var(--text-dim);
+  margin-top: 4px;
+}
+
+/* ── CALLOUT CYAN ── */
+.callout-cyan {
+  background: rgba(72, 202, 228, 0.08);
+  border: 1px solid var(--cyan-dark);
+  border-left: 4px solid var(--cyan);
+  padding: 20px 24px;
+  border-radius: 0 8px 8px 0;
+  font-size: 0.92rem;
+  color: var(--cyan);
+  line-height: 1.7;
+}
+
+.callout-cyan strong {
+  color: var(--text);
+}
+
+/* ── HORIZONTAL BAR CHART ── */
+.hbar-chart { margin-top: 16px; }
+
+.hbar-row {
+  display: grid;
+  grid-template-columns: 200px 1fr 120px;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 10px;
+  font-size: 0.85rem;
+}
+
+@media (max-width: 700px) {
+  .hbar-row {
+    grid-template-columns: 1fr;
+    gap: 4px;
+    margin-bottom: 16px;
+  }
+}
+
+.hbar-name {
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.hbar-track {
+  height: 28px;
+  background: var(--bg);
+  border-radius: 4px;
+  overflow: hidden;
+  position: relative;
+}
+
+.hbar-fill {
+  height: 100%;
+  border-radius: 4px;
+  background: linear-gradient(90deg, var(--red-dark), var(--red));
+  display: flex;
+  align-items: center;
+  padding-left: 10px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #fff;
+  white-space: nowrap;
+  min-width: fit-content;
+  transition: width 0.8s ease;
+}
+
+.hbar-meta {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  text-align: right;
+}
+
+.chart-note {
+  margin-top: 20px;
+  padding: 16px 20px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  font-style: italic;
+}
+
+/* ── CONCENTRATION PYRAMID ── */
+.pyramid-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  margin: 32px 0;
+}
+
+.pyramid-level {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 56px;
+  border-radius: 6px;
+  font-weight: 700;
+  text-align: center;
+  position: relative;
+  transition: transform 0.3s;
+}
+
+.pyramid-level:hover { transform: scale(1.02); }
+
+.pyr-1 {
+  width: 30%;
+  background: linear-gradient(135deg, var(--red), #c1121f);
+  color: #fff;
+  font-size: 1rem;
+}
+
+.pyr-2 {
+  width: 50%;
+  background: linear-gradient(135deg, var(--orange), #e85d04);
+  color: #fff;
+  font-size: 0.95rem;
+}
+
+.pyr-3 {
+  width: 70%;
+  background: linear-gradient(135deg, var(--gold), var(--gold-dim));
+  color: #000;
+  font-size: 0.95rem;
+}
+
+.pyr-4 {
+  width: 90%;
+  background: var(--bg-card-alt);
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  font-size: 0.85rem;
+}
+
+.pyramid-caption {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--gold);
+}
+
+.pyramid-sub {
+  text-align: center;
+  color: var(--text-dim);
+  font-size: 0.9rem;
+}
+
+/* ── ANOMALY CARDS ── */
+.anom-header {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.anom-big {
+  font-family: 'Playfair Display', serif;
+  font-size: 3.5rem;
+  font-weight: 900;
+  color: var(--red);
+  line-height: 1;
+}
+
+.anom-big-label {
+  font-size: 1.1rem;
+  color: var(--text-dim);
+}
+
+.anom-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+.anom-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 24px;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.3s, transform 0.2s;
+}
+
+.anom-card:hover {
+  border-color: var(--red-dark);
+  transform: translateY(-2px);
+}
+
+.anom-card::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: var(--red);
+}
+
+.anom-icon {
+  font-size: 1.8rem;
+  margin-bottom: 12px;
+}
+
+.anom-title {
+  font-weight: 700;
+  font-size: 1rem;
+  margin-bottom: 6px;
+}
+
+.anom-nums {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem;
+  color: var(--gold);
+  margin-bottom: 8px;
+}
+
+.anom-desc {
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  line-height: 1.5;
+}
+
+/* ── EMERGENCY TABLE ── */
+.emer-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 16px;
+}
+
+.emer-table th {
+  text-align: left;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.emer-table td {
+  padding: 14px 12px;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.9rem;
+}
+
+.emer-table tr:hover td { background: var(--bg-card); }
+
+.emer-monto {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+  color: var(--red);
+}
+
+.emer-inst { color: var(--text-dim); font-size: 0.8rem; }
+
+.emer-callout {
+  margin-top: 24px;
+  text-align: center;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--orange);
+}
+
+.emer-callout span { color: var(--text-dim); font-size: 0.9rem; font-weight: 400; display: block; }
+
+/* ── COMPARISON ROWS ── */
+.compare-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.compare-row {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 20px 24px;
+  display: grid;
+  grid-template-columns: 1fr auto auto auto;
+  gap: 16px;
+  align-items: center;
+  transition: border-color 0.3s;
+}
+
+.compare-row:hover { border-color: var(--cyan-dark); }
+
+@media (max-width: 700px) {
+  .compare-row {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+}
+
+.compare-label {
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.compare-old {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.9rem;
+  color: var(--text-dim);
+  text-align: right;
+}
+
+.compare-arrow {
+  font-size: 1.2rem;
+  color: var(--text-muted);
+}
+
+.compare-new {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-align: right;
+}
+
+.compare-delta {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 4px;
+  margin-left: 8px;
+}
+
+.delta-up {
+  color: var(--red);
+  background: var(--red-glow);
+}
+
+.delta-down {
+  color: var(--green);
+  background: rgba(82, 183, 136, 0.15);
+}
+
+/* ── EMERGENCY BREAKDOWN BAR ── */
+.emer-breakdown {
+  margin: 24px 0;
+}
+
+.emer-bar-wrap {
+  display: flex;
+  height: 48px;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+
+.emer-bar-seg {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: #fff;
+}
+
+.emer-bar-legend {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.emer-bar-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.88rem;
+}
+
+/* ── MICRO CARDS ── */
+.micro-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.micro-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 24px;
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  transition: border-color 0.3s;
+}
+
+.micro-card:hover { border-color: var(--orange); }
+
+.micro-badge {
+  background: var(--orange);
+  color: #000;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+
+.micro-info h4 { font-size: 0.95rem; margin-bottom: 4px; }
+
+.micro-info .micro-monto {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--orange);
+}
+
+.micro-info .micro-detail { font-size: 0.8rem; color: var(--text-dim); margin-top: 4px; }
+
+.micro-info .micro-rfc {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+/* ── CDMX DONUT ── */
+.cdmx-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  margin-top: 16px;
+}
+
+@media (max-width: 700px) { .cdmx-layout { grid-template-columns: 1fr; } }
+
+.donut-wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.donut-chart {
+  width: 260px;
+  height: 260px;
+  border-radius: 50%;
+  position: relative;
+  /* conic gradient for the donut */
+  background: conic-gradient(
+    var(--red) 0% 40.3%,
+    var(--cyan-dark) 40.3% 61.6%,
+    var(--gold) 61.6% 82.9%,
+    var(--green) 82.9% 89.7%,
+    var(--purple) 89.7% 95.9%,
+    var(--text-muted) 95.9% 100%
+  );
+}
+
+.donut-chart::before {
+  content: '$268B';
+  position: absolute;
+  inset: 40px;
+  background: var(--bg);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Playfair Display', serif;
+  font-size: 1.6rem;
+  font-weight: 900;
+  color: var(--text);
+}
+
+.cdmx-legend { display: flex; flex-direction: column; gap: 10px; justify-content: center; }
+
+.cdmx-leg-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.88rem;
+}
+
+.cdmx-leg-item .dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+
+.cdmx-leg-item .pct {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+  min-width: 48px;
+}
+
+.cdmx-deps {
+  margin-top: 32px;
+}
+
+.cdmx-deps h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.2rem;
+  margin-bottom: 16px;
+}
+
+.dep-row {
+  display: grid;
+  grid-template-columns: 1fr 140px 60px;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.88rem;
+}
+
+.dep-row:first-of-type { border-top: 1px solid var(--border); }
+
+.dep-monto {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+  color: var(--green);
+  text-align: right;
+}
+
+.dep-pct {
+  text-align: right;
+  color: var(--text-dim);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem;
+}
+
+/* ── OPACITY METER ── */
+.opacity-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.opacity-row {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 20px 24px;
+  display: grid;
+  grid-template-columns: 1fr 200px;
+  gap: 16px;
+  align-items: center;
+  transition: border-color 0.3s;
+}
+
+.opacity-row:hover { border-color: var(--red-dark); }
+
+@media (max-width: 600px) { .opacity-row { grid-template-columns: 1fr; } }
+
+.opacity-name { font-weight: 700; font-size: 1rem; }
+.opacity-detail { font-size: 0.8rem; color: var(--text-dim); margin-top: 2px; }
+
+.opacity-meter {
+  height: 32px;
+  background: var(--bg);
+  border-radius: 6px;
+  overflow: hidden;
+  position: relative;
+}
+
+.opacity-fill {
+  height: 100%;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 10px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.of-99 { width: 99%; background: linear-gradient(90deg, #5c0a0a, var(--red)); }
+.of-87 { width: 87%; background: linear-gradient(90deg, #5c0a0a, var(--red)); }
+.of-74 { width: 74%; background: linear-gradient(90deg, #5c1a0a, var(--orange)); }
+.of-60 { width: 60%; background: linear-gradient(90deg, #5c2a0a, var(--orange)); }
+.of-57 { width: 57%; background: linear-gradient(90deg, #5c2a0a, var(--gold-dim)); }
+
+/* ── FOOTER ── */
+.sources {
+  padding: 64px 0 40px;
+  border-top: 1px solid var(--border);
+}
+
+.sources h2 { font-size: 1.4rem; margin-bottom: 24px; }
+
+.source-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 12px;
+  margin-bottom: 32px;
+}
+
+.source-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  padding: 12px 16px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+.source-item .src-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--cyan);
+  margin-top: 7px;
+  flex-shrink: 0;
+}
+
+.source-item strong { color: var(--text); }
+
+.methodology {
+  padding: 20px 24px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--cyan-dark);
+  border-radius: 0 8px 8px 0;
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  line-height: 1.7;
+  margin-bottom: 40px;
+}
+
+.footer-brand {
+  text-align: center;
+  padding: 40px 0;
+  border-top: 1px solid var(--border);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  letter-spacing: 1px;
+}
+
+.footer-brand span { color: var(--cyan); }
+
+/* ── PRINT ── */
+@media print {
+  body { background: #fff; color: #111; }
+  body::before { display: none; }
+  .macro-card, .anom-card, .micro-card, .opacity-row, .source-item, .methodology {
+    background: #f8f8f8;
+    border-color: #ddd;
+  }
+  .callout-red { background: #fff0f0; }
+  .callout-cyan { background: #f0fffe; }
+  section { break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════ HEADER ══════════════════════ -->
+<header class="hero">
+  <div class="container">
+    <div class="hero-label">Investigaci&oacute;n con datos abiertos</div>
+    <h1>Radiograf&iacute;a del <span class="accent">Gasto P&uacute;blico</span><br>en M&eacute;xico 2025</h1>
+    <p class="hero-sub">
+      An&aacute;lisis de <strong>91,850 contratos</strong> y <strong>$707.8 mil millones MXN</strong>
+      en CompraNet &mdash; con comparativa 2024 vs 2025 para rastrear c&oacute;mo evoluciona
+      cada peso del Presupuesto de Egresos.
+    </p>
+  </div>
+</header>
+
+<!-- ══════════════════════ 01. MACRO ══════════════════════ -->
+<section>
+  <div class="container">
+    <div class="section-num">01 &mdash; N&uacute;meros macro</div>
+    <h2>El dinero <span class="hl-cyan">en cifras</span></h2>
+    <div class="macro-grid">
+      <div class="macro-card">
+        <div class="macro-label">Presupuesto Federal 2025</div>
+        <div class="macro-value">$10.8B</div>
+        <div class="macro-detail">Billones MXN &mdash; Presupuesto de Egresos de la Federaci&oacute;n (PEF)</div>
+      </div>
+      <div class="macro-card">
+        <div class="macro-label">CompraNet 2025</div>
+        <div class="macro-value">$707.8 mmd</div>
+        <div class="macro-detail">91,850 contratos &middot; 30,703 proveedores registrados</div>
+      </div>
+      <div class="macro-card">
+        <div class="macro-label">Presupuesto CDMX 2024</div>
+        <div class="macro-value">$268 mmd</div>
+        <div class="macro-detail">19,453 partidas presupuestarias &middot; 16 alcald&iacute;as</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════ 02. COMPARATIVA 2024 vs 2025 ══════════════════════ -->
+<section>
+  <div class="container">
+    <div class="section-num">02 &mdash; 2024 vs 2025</div>
+    <h2>La <span class="hl">tendencia</span>: menos contratos, m&aacute;s dinero</h2>
+    <div class="compare-grid">
+      <div class="compare-row">
+        <div class="compare-label">Contratos totales</div>
+        <div class="compare-old">143,542</div>
+        <div class="compare-arrow">&rarr;</div>
+        <div class="compare-new">91,850 <span class="compare-delta delta-down">-36%</span></div>
+      </div>
+      <div class="compare-row">
+        <div class="compare-label">Monto total</div>
+        <div class="compare-old">$402.6 mmd</div>
+        <div class="compare-arrow">&rarr;</div>
+        <div class="compare-new">$707.8 mmd <span class="compare-delta delta-up">+75.8%</span></div>
+      </div>
+      <div class="compare-row">
+        <div class="compare-label">Caso fortuito</div>
+        <div class="compare-old">$27.6 mmd</div>
+        <div class="compare-arrow">&rarr;</div>
+        <div class="compare-new">$106.2 mmd <span class="compare-delta delta-up">+285%</span></div>
+      </div>
+      <div class="compare-row">
+        <div class="compare-label">Concentraci&oacute;n top 500</div>
+        <div class="compare-old">60.2%</div>
+        <div class="compare-arrow">&rarr;</div>
+        <div class="compare-new">79.9% <span class="compare-delta delta-up">+19.7pp</span></div>
+      </div>
+      <div class="compare-row">
+        <div class="compare-label">Proveedores &uacute;nicos</div>
+        <div class="compare-old">38,139</div>
+        <div class="compare-arrow">&rarr;</div>
+        <div class="compare-new">30,703 <span class="compare-delta delta-down">-19.5%</span></div>
+      </div>
+    </div>
+    <div class="callout-red" style="margin-top: 28px;">
+      Menos contratos, m&aacute;s dinero, menos proveedores. El mercado se est&aacute; cerrando.
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════ 03. COMO SE CONTRATA ══════════════════════ -->
+<section>
+  <div class="container">
+    <div class="section-num">03 &mdash; C&oacute;mo se contrata</div>
+    <h2>La mitad del dinero se asigna <span class="hl">sin competencia</span></h2>
+    <div class="contrata-wrap">
+      <div class="stacked-bar">
+        <div class="seg seg-lic">53.9%</div>
+        <div class="seg seg-adj">41.5%</div>
+        <div class="seg seg-inv">5.7%</div>
+      </div>
+      <div class="bar-legend">
+        <div class="bar-legend-item">
+          <div class="legend-dot" style="background:var(--cyan-dark)"></div>
+          Licitaciones p&uacute;blicas &mdash; $381 mmd
+        </div>
+        <div class="bar-legend-item">
+          <div class="legend-dot" style="background:var(--red)"></div>
+          Adjudicaciones directas &mdash; $294 mmd
+        </div>
+        <div class="bar-legend-item">
+          <div class="legend-dot" style="background:var(--gold-dim)"></div>
+          Invitaci&oacute;n a 3+ &mdash; $40 mmd
+        </div>
+      </div>
+      <div class="callout-red">
+        41.5% del gasto p&uacute;blico se asigna SIN competencia
+        <span>$293,907 millones de pesos en adjudicaciones directas durante 2025</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════ 04. TOP PROVEEDORES ══════════════════════ -->
+<section>
+  <div class="container">
+    <div class="section-num">04 &mdash; Proveedores</div>
+    <h2>Top 10 por <span class="hl">adjudicaci&oacute;n directa</span></h2>
+    <div class="hbar-chart">
+      <div class="hbar-row">
+        <div class="hbar-name">Boehringer Ingelheim</div>
+        <div class="hbar-track"><div class="hbar-fill" style="width:100%">$8,495M</div></div>
+        <div class="hbar-meta">116 ctos &middot; 100%</div>
+      </div>
+      <div class="hbar-row">
+        <div class="hbar-name">Roche</div>
+        <div class="hbar-track"><div class="hbar-fill" style="width:95%">$8,083M</div></div>
+        <div class="hbar-meta">33 ctos &middot; 100%</div>
+      </div>
+      <div class="hbar-row">
+        <div class="hbar-name">Gilead Sciences</div>
+        <div class="hbar-track"><div class="hbar-fill" style="width:62%">$5,323M</div></div>
+        <div class="hbar-meta">19 ctos &middot; 100%</div>
+      </div>
+      <div class="hbar-row">
+        <div class="hbar-name">Merck Sharp &amp; Dohme</div>
+        <div class="hbar-track"><div class="hbar-fill" style="width:36%">$3,106M</div></div>
+        <div class="hbar-meta">49 ctos &middot; 100%</div>
+      </div>
+      <div class="hbar-row">
+        <div class="hbar-name">Janssen-Cilag</div>
+        <div class="hbar-track"><div class="hbar-fill" style="width:35%">$3,022M</div></div>
+        <div class="hbar-meta">58 ctos &middot; 100%</div>
+      </div>
+      <div class="hbar-row">
+        <div class="hbar-name">Pfizer</div>
+        <div class="hbar-track"><div class="hbar-fill" style="width:34%">$2,894M</div></div>
+        <div class="hbar-meta">127 ctos &middot; 94%</div>
+      </div>
+      <div class="hbar-row">
+        <div class="hbar-name">Eli Lilly</div>
+        <div class="hbar-track"><div class="hbar-fill" style="width:30%">$2,585M</div></div>
+        <div class="hbar-meta">26 ctos &middot; 100%</div>
+      </div>
+      <div class="hbar-row">
+        <div class="hbar-name">Octapharma</div>
+        <div class="hbar-track"><div class="hbar-fill" style="width:15%">$1,330M</div></div>
+        <div class="hbar-meta">23 ctos &middot; 100%</div>
+      </div>
+      <div class="hbar-row">
+        <div class="hbar-name">Chiesi</div>
+        <div class="hbar-track"><div class="hbar-fill" style="width:13%">$1,127M</div></div>
+        <div class="hbar-meta">40 ctos &middot; 100%</div>
+      </div>
+      <div class="hbar-row">
+        <div class="hbar-name">CSL Behring</div>
+        <div class="hbar-track"><div class="hbar-fill" style="width:12%">$1,086M</div></div>
+        <div class="hbar-meta">70 ctos &middot; 97%</div>
+      </div>
+    </div>
+    <div class="chart-note">
+      Todos son laboratorios farmac&eacute;uticos con patentes vigentes. La adjudicaci&oacute;n directa tiene fundamento legal (Art. 41 LAASSP &mdash; oferente &uacute;nico). Este patr&oacute;n es similar en sistemas de salud de todo el mundo. La pregunta no es si es legal, sino si el volumen es eficiente.
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════ 05. CONCENTRACION ══════════════════════ -->
+<section>
+  <div class="container">
+    <div class="section-num">05 &mdash; Concentraci&oacute;n</div>
+    <h2>El dinero se concentra en <span class="hl-gold">pocas manos</span></h2>
+    <div class="pyramid-wrap">
+      <div class="pyramid-level pyr-1">Top 20 &rarr; 25.9%</div>
+      <div class="pyramid-level pyr-2">Top 100 &rarr; 53.5%</div>
+      <div class="pyramid-level pyr-3">Top 500 &rarr; 79.9%</div>
+      <div class="pyramid-level pyr-4">30,703 proveedores totales &rarr; 100%</div>
+    </div>
+    <div class="pyramid-caption">500 empresas se llevan el 80% del dinero</div>
+    <div class="pyramid-sub">De los 30,703 proveedores registrados en CompraNet 2025</div>
+    <div class="chart-note" style="margin-top: 24px;">
+      En 2024, el top 500 concentraba 60.2%. En un solo a&ntilde;o subi&oacute; a 79.9%.
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════ 06. ANOMALIAS ══════════════════════ -->
+<section>
+  <div class="container">
+    <div class="section-num">06 &mdash; Anomal&iacute;as detectadas</div>
+    <h2><span class="hl">Red flags</span> en los datos</h2>
+    <div class="anom-header">
+      <div class="anom-big">612</div>
+      <div class="anom-big-label">anomal&iacute;as detectadas por an&aacute;lisis algor&iacute;tmico</div>
+    </div>
+    <div class="anom-grid">
+      <div class="anom-card">
+        <div class="anom-icon">&#9888;</div>
+        <div class="anom-title">Fragmentaci&oacute;n</div>
+        <div class="anom-nums">200 casos &middot; $1,500M involucrados</div>
+        <div class="anom-desc">M&uacute;ltiples contratos peque&ntilde;os al mismo proveedor en la misma unidad compradora para evitar el umbral de licitaci&oacute;n.</div>
+      </div>
+      <div class="anom-card">
+        <div class="anom-icon">&#10060;</div>
+        <div class="anom-title">Adj. directa excesiva</div>
+        <div class="anom-nums">200 casos &middot; $65,700M involucrados</div>
+        <div class="anom-desc">Proveedores donde m&aacute;s del 90% de sus contratos son adjudicaciones directas con vol&uacute;menes significativos.</div>
+      </div>
+      <div class="anom-card">
+        <div class="anom-icon">&#128123;</div>
+        <div class="anom-title">Proveedores fantasma</div>
+        <div class="anom-nums">100 casos &middot; $11,900M involucrados</div>
+        <div class="anom-desc">Solo 1-2 contratos, todos por adjudicaci&oacute;n directa, con montos de decenas o cientos de millones.</div>
+      </div>
+      <div class="anom-card">
+        <div class="anom-icon">&#128200;</div>
+        <div class="anom-title">Montos at&iacute;picos</div>
+        <div class="anom-nums">100 casos &middot; $177,600M involucrados</div>
+        <div class="anom-desc">Contratos con montos que est&aacute;n 3+ desviaciones est&aacute;ndar sobre la media de su categor&iacute;a.</div>
+      </div>
+      <div class="anom-card">
+        <div class="anom-icon">&#127981;</div>
+        <div class="anom-title">Concentraci&oacute;n</div>
+        <div class="anom-nums">12 casos &middot; $138,300M involucrados</div>
+        <div class="anom-desc">Pocas empresas acaparan porcentajes desproporcionados del gasto en sectores completos.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════ 07. EMERGENCIAS ══════════════════════ -->
+<section>
+  <div class="container">
+    <div class="section-num">07 &mdash; Emergencia permanente</div>
+    <h2>Emergencia permanente: <span class="hl">$106 mil millones</span> en &laquo;caso fortuito&raquo;</h2>
+    <div class="emer-callout">
+      7,303 contratos justificados como emergencia
+      <span>15% del gasto total de CompraNet</span>
+    </div>
+
+    <!-- Breakdown bar -->
+    <div class="emer-breakdown">
+      <div style="margin-top:24px; margin-bottom:8px; font-weight:700; font-size:1rem;">Distribuci&oacute;n del gasto de emergencia</div>
+      <div class="emer-bar-wrap">
+        <div class="emer-bar-seg" style="flex:88; background: var(--red);">88%</div>
+        <div class="emer-bar-seg" style="flex:2.3; background: var(--gold); font-size:0.65rem;">2.3%</div>
+        <div class="emer-bar-seg" style="flex:9.7; background: var(--text-muted); font-size:0.75rem;">9.7%</div>
+      </div>
+      <div class="emer-bar-legend">
+        <div class="emer-bar-legend-item">
+          <div class="legend-dot" style="background:var(--red)"></div>
+          Salud (medicamentos, hospitales, servicios m&eacute;dicos) &mdash; 88%
+        </div>
+        <div class="emer-bar-legend-item">
+          <div class="legend-dot" style="background:var(--gold)"></div>
+          Obra p&uacute;blica &mdash; 2.3%
+        </div>
+        <div class="emer-bar-legend-item">
+          <div class="legend-dot" style="background:var(--text-muted)"></div>
+          Otros &mdash; 9.7%
+        </div>
+      </div>
+    </div>
+
+    <!-- Year comparison -->
+    <div class="compare-grid" style="margin-bottom: 28px;">
+      <div class="compare-row">
+        <div class="compare-label">Gasto en caso fortuito</div>
+        <div class="compare-old">2024: $27.6 mmd</div>
+        <div class="compare-arrow">&rarr;</div>
+        <div class="compare-new">2025: $106.2 mmd <span class="compare-delta delta-up">+285%</span></div>
+      </div>
+    </div>
+
+    <!-- Context callout (cyan) -->
+    <div class="callout-cyan" style="margin-bottom: 28px;">
+      <strong>Contexto:</strong> La transici&oacute;n INSABI &rarr; IMSS-Bienestar (2023-2024) gener&oacute; desabasto documentado de medicamentos. Muchas de estas compras de emergencia buscan cubrir ese d&eacute;ficit. La pregunta es por qu&eacute;, despu&eacute;s de 6 a&ntilde;os, el sistema sigue sin poder planear sus compras.
+    </div>
+
+    <!-- Top 5 table -->
+    <table class="emer-table">
+      <thead>
+        <tr><th>#</th><th>Proveedor</th><th>Monto</th><th>Institucion</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td>AstraZeneca</td>
+          <td class="emer-monto">$5,651M</td>
+          <td><span class="emer-inst">IMSS &mdash; &laquo;compra de claves necesarias para el sector salud&raquo;</span></td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td>Laboratorios Pisa</td>
+          <td class="emer-monto">$4,816M</td>
+          <td><span class="emer-inst">IMSS &mdash; mismo concepto</span></td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td>Grifols Mexico</td>
+          <td class="emer-monto">$1,901M</td>
+          <td><span class="emer-inst">IMSS &mdash; mismo concepto</span></td>
+        </tr>
+        <tr>
+          <td>4</td>
+          <td>Kedrion Mexicana</td>
+          <td class="emer-monto">$1,319M</td>
+          <td><span class="emer-inst">IMSS &mdash; mismo concepto</span></td>
+        </tr>
+        <tr>
+          <td>5</td>
+          <td>Pryse Seguridad</td>
+          <td class="emer-monto">$1,136M</td>
+          <td><span class="emer-inst">IMSS-Bienestar &mdash; seguridad subrogada</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ══════════════════════ 08. MICRO ══════════════════════ -->
+<section>
+  <div class="container">
+    <div class="section-num">08 &mdash; Red flag</div>
+    <h2>Empresas <span class="hl-gold">MICRO</span> con contratos gigantes</h2>
+    <div class="micro-grid">
+      <div class="micro-card">
+        <div class="micro-badge">MICRO</div>
+        <div class="micro-info">
+          <h4>Comercializadora de Seguridad Privada</h4>
+          <div class="micro-rfc">Constituida 2015</div>
+          <div class="micro-monto">$4,342M</div>
+          <div class="micro-detail">CONAGUA &mdash; servicio de vigilancia</div>
+        </div>
+      </div>
+      <div class="micro-card">
+        <div class="micro-badge">MICRO</div>
+        <div class="micro-info">
+          <h4>Ingentec Constructora</h4>
+          <div class="micro-rfc">Constituida 2011</div>
+          <div class="micro-monto">$727M</div>
+          <div class="micro-detail">CAPUFE &mdash; adj. directa por emergencia, deslizamiento de talud</div>
+        </div>
+      </div>
+      <div class="micro-card">
+        <div class="micro-badge">MICRO</div>
+        <div class="micro-info">
+          <h4>Collective Sublackeyes</h4>
+          <div class="micro-rfc">Constituida 2022</div>
+          <div class="micro-monto">$237M</div>
+          <div class="micro-detail">IMSS &mdash; transporte a&eacute;reo (ala fija, rotativa y ambulancias)</div>
+        </div>
+      </div>
+      <div class="micro-card">
+        <div class="micro-badge">MICRO</div>
+        <div class="micro-info">
+          <h4>Grupo Industrial Mayani</h4>
+          <div class="micro-rfc">Constituida 2023</div>
+          <div class="micro-monto">$205M</div>
+          <div class="micro-detail">Adj. directa urgencia &mdash; aires acondicionados</div>
+        </div>
+      </div>
+    </div>
+    <div class="chart-note">
+      Las patentes farmac&eacute;uticas explican las adjudicaciones directas a laboratorios. No explican que una empresa de 2 a&ntilde;os clasificada como micro reciba $205M por urgencia para mantenimiento de aires acondicionados.
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════ 09. CDMX ══════════════════════ -->
+<section>
+  <div class="container">
+    <div class="section-num">09 &mdash; Ciudad de M&eacute;xico</div>
+    <h2>CDMX: &iquest;a d&oacute;nde va <span class="hl-cyan">el dinero</span>?</h2>
+    <div class="cdmx-layout">
+      <div class="donut-wrap">
+        <div class="donut-chart"></div>
+      </div>
+      <div class="cdmx-legend">
+        <div class="cdmx-leg-item">
+          <div class="dot" style="background:var(--red)"></div>
+          <span class="pct" style="color:var(--red)">40.3%</span>
+          N&oacute;mina (servicios personales) &mdash; $108 mmd
+        </div>
+        <div class="cdmx-leg-item">
+          <div class="dot" style="background:var(--cyan-dark)"></div>
+          <span class="pct" style="color:var(--cyan-dark)">21.3%</span>
+          Transferencias y subsidios
+        </div>
+        <div class="cdmx-leg-item">
+          <div class="dot" style="background:var(--gold)"></div>
+          <span class="pct" style="color:var(--gold)">18.9%</span>
+          Servicios generales
+        </div>
+        <div class="cdmx-leg-item">
+          <div class="dot" style="background:var(--green)"></div>
+          <span class="pct" style="color:var(--green)">6.8%</span>
+          Inversi&oacute;n p&uacute;blica
+        </div>
+        <div class="cdmx-leg-item">
+          <div class="dot" style="background:var(--purple)"></div>
+          <span class="pct" style="color:var(--purple)">6.2%</span>
+          Materiales y suministros
+        </div>
+        <div class="cdmx-leg-item">
+          <div class="dot" style="background:var(--text-muted)"></div>
+          <span class="pct" style="color:var(--text-muted)">6.6%</span>
+          Otros (deuda, inversiones, bienes)
+        </div>
+      </div>
+    </div>
+    <div class="cdmx-deps">
+      <h3>Top dependencias</h3>
+      <div class="dep-row">
+        <div>Secretar&iacute;a de Seguridad Ciudadana</div>
+        <div class="dep-monto">$26,179M</div>
+        <div class="dep-pct">9.8%</div>
+      </div>
+      <div class="dep-row">
+        <div>Sistema de Transporte Colectivo (Metro)</div>
+        <div class="dep-monto">$20,551M</div>
+        <div class="dep-pct">7.7%</div>
+      </div>
+      <div class="dep-row">
+        <div>Sistema de Aguas</div>
+        <div class="dep-monto">$13,266M</div>
+        <div class="dep-pct">5.0%</div>
+      </div>
+      <div class="dep-row">
+        <div>Secretar&iacute;a de Salud</div>
+        <div class="dep-monto">$13,128M</div>
+        <div class="dep-pct">4.9%</div>
+      </div>
+      <div class="dep-row">
+        <div>Polic&iacute;a Auxiliar</div>
+        <div class="dep-monto">$12,866M</div>
+        <div class="dep-pct">4.8%</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════ 10. INSTITUCIONES OPACAS ══════════════════════ -->
+<section>
+  <div class="container">
+    <div class="section-num">10 &mdash; Opacidad institucional</div>
+    <h2>Las instituciones m&aacute;s <span class="hl">opacas</span></h2>
+    <div class="opacity-list">
+      <div class="opacity-row">
+        <div>
+          <div class="opacity-name">Dos Bocas (ASIPONA)</div>
+          <div class="opacity-detail">$8,205M de $8,323M en adj. directas</div>
+        </div>
+        <div class="opacity-meter"><div class="opacity-fill of-99">99%</div></div>
+      </div>
+      <div class="opacity-row">
+        <div>
+          <div class="opacity-name">Banco del Bienestar</div>
+          <div class="opacity-detail">$5,276M de $6,094M en adj. directas</div>
+        </div>
+        <div class="opacity-meter"><div class="opacity-fill of-87">87%</div></div>
+      </div>
+      <div class="opacity-row">
+        <div>
+          <div class="opacity-name">SAT</div>
+          <div class="opacity-detail">$1,374M de $1,869M en adj. directas</div>
+        </div>
+        <div class="opacity-meter"><div class="opacity-fill of-74">74%</div></div>
+      </div>
+      <div class="opacity-row">
+        <div>
+          <div class="opacity-name">Secretaria de Marina</div>
+          <div class="opacity-detail">$1,703M de $2,837M en adj. directas</div>
+        </div>
+        <div class="opacity-meter"><div class="opacity-fill of-60">60%</div></div>
+      </div>
+      <div class="opacity-row">
+        <div>
+          <div class="opacity-name">IMSS</div>
+          <div class="opacity-detail">$153,168M de $268,250M en adj. directas</div>
+        </div>
+        <div class="opacity-meter"><div class="opacity-fill of-57">57%</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════ FUENTES ══════════════════════ -->
+<section class="sources">
+  <div class="container">
+    <div class="section-num">Fuentes y metodolog&iacute;a</div>
+    <h2>Datos <span class="hl-cyan">100% p&uacute;blicos</span></h2>
+    <div class="source-grid">
+      <div class="source-item">
+        <div class="src-dot"></div>
+        <div><strong>Transparencia Presupuestaria</strong><br>transparenciapresupuestaria.gob.mx &mdash; PEF 2025 (CSV, 87.5 MB)</div>
+      </div>
+      <div class="source-item">
+        <div class="src-dot"></div>
+        <div><strong>CompraNet / ComprasMX</strong><br>upcp-compranet.buengobierno.gob.mx &mdash; Contratos 2025 (CSV, 110 MB, 91,850 contratos)</div>
+      </div>
+      <div class="source-item">
+        <div class="src-dot"></div>
+        <div><strong>CompraNet / ComprasMX</strong><br>Contratos CompraNet 2024 (CSV, 168 MB, 143,542 contratos)</div>
+      </div>
+      <div class="source-item">
+        <div class="src-dot"></div>
+        <div><strong>datos.cdmx.gob.mx</strong><br>Presupuesto de Egresos CDMX 2024 (CKAN API)</div>
+      </div>
+      <div class="source-item">
+        <div class="src-dot"></div>
+        <div><strong>datos.gob.mx</strong><br>Cat&aacute;logo Nacional de Datos Abiertos (CKAN API federal)</div>
+      </div>
+      <div class="source-item">
+        <div class="src-dot"></div>
+        <div><strong>OCDS / Open Contracting</strong><br>data.open-contracting.org &mdash; Contrataciones abiertas CDMX</div>
+      </div>
+      <div class="source-item">
+        <div class="src-dot"></div>
+        <div><strong>ASF</strong><br>Auditor&iacute;a Superior de la Federaci&oacute;n &mdash; informe.asf.gob.mx</div>
+      </div>
+    </div>
+    <div class="methodology">
+      <strong>Metodolog&iacute;a:</strong> Datos descargados y procesados autom&aacute;ticamente mediante crawlers
+      de c&oacute;digo abierto. Las anomal&iacute;as fueron detectadas por algoritmos estad&iacute;sticos
+      (z-score, frecuencia, concentraci&oacute;n). <strong>Este an&aacute;lisis no implica ilegalidad</strong> &mdash;
+      las adjudicaciones directas a farmac&eacute;uticas tienen fundamento legal en patentes vigentes,
+      y las compras de emergencia en salud tienen contexto en la transici&oacute;n INSABI-IMSS Bienestar.
+      Sin embargo, hay patrones que no se explican por estas justificaciones y que merecen escrutinio p&uacute;blico.
+    </div>
+  </div>
+</section>
+
+<footer class="footer-brand">
+  <div class="container">
+    Generado por <span>gasto-publico-mx</span> &middot; C&oacute;digo abierto &middot; Datos p&uacute;blicos &middot; 2025
+  </div>
+</footer>
+
+</body>
+</html>
