@@ -929,6 +929,129 @@ h2 .hl-gold { color: var(--gold); }
 
 .footer-brand span { color: var(--cyan); }
 
+/* ── STATE TABLE ── */
+.state-section-intro {
+  font-size: 0.95rem;
+  color: var(--text-dim);
+  margin-bottom: 24px;
+  line-height: 1.7;
+}
+
+.state-filter {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.state-filter button {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  padding: 6px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.5px;
+  transition: all 0.2s;
+}
+
+.state-filter button:hover,
+.state-filter button.active {
+  background: var(--cyan-dark);
+  color: #fff;
+  border-color: var(--cyan-dark);
+}
+
+.state-table-wrap {
+  overflow-x: auto;
+  margin-top: 8px;
+}
+
+.state-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+.state-table th {
+  text-align: left;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.68rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  padding: 10px 10px;
+  border-bottom: 2px solid var(--border);
+  cursor: pointer;
+  white-space: nowrap;
+  user-select: none;
+  transition: color 0.2s;
+}
+
+.state-table th:hover { color: var(--cyan); }
+.state-table th.sorted { color: var(--cyan); }
+
+.state-table td {
+  padding: 10px 10px;
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+
+.state-table tr:hover td { background: var(--bg-card); }
+
+.state-table .st-name { font-weight: 600; }
+
+.state-table .st-monto {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+  color: var(--cyan);
+}
+
+.state-table .st-pct {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem;
+  color: var(--text-dim);
+}
+
+.state-bar-cell {
+  width: 180px;
+  min-width: 120px;
+}
+
+.state-bar-track {
+  height: 18px;
+  background: var(--bg);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.state-bar-fill {
+  height: 100%;
+  border-radius: 3px;
+  background: linear-gradient(90deg, var(--cyan-dark), var(--cyan));
+  transition: width 0.4s;
+}
+
+.state-heat {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+  font-size: 0.8rem;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.heat-high { color: var(--red); background: var(--red-glow); }
+.heat-med { color: var(--orange); background: rgba(244,132,95,0.12); }
+.heat-low { color: var(--green); background: rgba(82,183,136,0.12); }
+
+.state-total-row td {
+  border-top: 2px solid var(--border);
+  font-weight: 700;
+  color: var(--text);
+}
+
 /* ── PRINT ── */
 @media print {
   body { background: #fff; color: #111; }
@@ -1397,10 +1520,138 @@ h2 .hl-gold { color: var(--gold); }
   </div>
 </section>
 
-<!-- ══════════════════════ 10. INSTITUCIONES OPACAS ══════════════════════ -->
+<!-- ══════════════════════ 10. TODOS LOS ESTADOS ══════════════════════ -->
 <section>
   <div class="container">
-    <div class="section-num">10 &mdash; Opacidad institucional</div>
+    <div class="section-num">10 &mdash; Los 32 estados</div>
+    <h2>&iquest;Cu&aacute;nto recibe <span class="hl-gold">tu estado</span>?</h2>
+    <p class="state-section-intro">
+      Distribuci&oacute;n del Presupuesto de Egresos de la Federaci&oacute;n 2025 por entidad federativa.
+      Incluye participaciones, aportaciones y gasto federalizado.
+      CDMX concentra el 41.5% por ser sede de la mayor&iacute;a de las dependencias federales.
+    </p>
+
+    <div class="state-filter">
+      <button class="active" onclick="sortStates('monto')">Por monto</button>
+      <button onclick="sortStates('percapita')">Per c&aacute;pita (est.)</button>
+      <button onclick="sortStates('alpha')">Alfab&eacute;tico</button>
+    </div>
+
+    <div class="state-table-wrap">
+      <table class="state-table" id="stateTable">
+        <thead>
+          <tr>
+            <th style="width:30px">#</th>
+            <th>Estado</th>
+            <th>Presupuesto PEF</th>
+            <th>% del total</th>
+            <th class="state-bar-cell">Proporci&oacute;n</th>
+            <th>Per c&aacute;pita (est.)</th>
+          </tr>
+        </thead>
+        <tbody id="stateBody"></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<script>
+const STATES = [
+  {n:"Ciudad de M\u00e9xico", pef:4478669536258, pop:9209944},
+  {n:"Estado de M\u00e9xico", pef:480872197865, pop:16992418},
+  {n:"Veracruz", pef:356445677122, pop:8062579},
+  {n:"Jalisco", pef:298597408033, pop:8348151},
+  {n:"Nuevo Le\u00f3n", pef:290055095246, pop:5784442},
+  {n:"Tabasco", pef:255613311477, pop:2402598},
+  {n:"Guanajuato", pef:203619972921, pop:6166934},
+  {n:"Tamaulipas", pef:194313353827, pop:3527735},
+  {n:"Puebla", pef:185917200637, pop:6583278},
+  {n:"Baja California", pef:171030824997, pop:3769020},
+  {n:"Oaxaca", pef:170794891006, pop:4132148},
+  {n:"Chiapas", pef:167217997984, pop:5543828},
+  {n:"Chihuahua", pef:160709626725, pop:3741869},
+  {n:"Yucat\u00e1n", pef:146502478620, pop:2320898},
+  {n:"Sonora", pef:142905741928, pop:2944840},
+  {n:"Michoac\u00e1n", pef:142649443851, pop:4748846},
+  {n:"Coahuila", pef:142643809853, pop:3146771},
+  {n:"Sinaloa", pef:134561226558, pop:3026943},
+  {n:"Guerrero", pef:134487025892, pop:3540685},
+  {n:"San Luis Potos\u00ed", pef:116893240193, pop:2822255},
+  {n:"Hidalgo", pef:116650647085, pop:3082841},
+  {n:"Campeche", pef:103474434915, pop:928363},
+  {n:"Quer\u00e9taro", pef:96163753515, pop:2368467},
+  {n:"Durango", pef:80817807173, pop:1832650},
+  {n:"Morelos", pef:79823975503, pop:1971520},
+  {n:"Aguascalientes", pef:62356052480, pop:1425607},
+  {n:"Quintana Roo", pef:61154756500, pop:1857985},
+  {n:"Zacatecas", pef:57142954156, pop:1622138},
+  {n:"Baja California Sur", pef:52799010326, pop:798447},
+  {n:"Nayarit", pef:49643384070, pop:1235456},
+  {n:"Colima", pef:45538947269, pop:731391},
+  {n:"Tlaxcala", pef:44818412118, pop:1342977}
+];
+
+const maxPef = STATES[0].pef;
+let currentSort = 'monto';
+
+function fmt(n) {
+  if (n >= 1e12) return '$' + (n/1e12).toFixed(1) + 'B';
+  if (n >= 1e9) return '$' + (n/1e9).toFixed(1) + ' mmd';
+  return '$' + (n/1e6).toFixed(0) + 'M';
+}
+
+function fmtPc(n) { return '$' + Math.round(n).toLocaleString('es-MX'); }
+
+function sortStates(mode) {
+  currentSort = mode;
+  document.querySelectorAll('.state-filter button').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+  renderStates();
+}
+
+function renderStates() {
+  let sorted = [...STATES];
+  if (currentSort === 'monto') sorted.sort((a,b) => b.pef - a.pef);
+  else if (currentSort === 'percapita') sorted.sort((a,b) => (b.pef/b.pop) - (a.pef/a.pop));
+  else sorted.sort((a,b) => a.n.localeCompare(b.n, 'es'));
+
+  const totalPef = STATES.reduce((s,x) => s + x.pef, 0);
+  const tbody = document.getElementById('stateBody');
+  let html = '';
+
+  sorted.forEach((s, i) => {
+    const pct = (s.pef / totalPef * 100);
+    const barW = (s.pef / maxPef * 100);
+    const pc = s.pef / s.pop;
+    const heatClass = pc > 200000 ? 'heat-high' : pc > 60000 ? 'heat-med' : 'heat-low';
+
+    html += '<tr>' +
+      '<td style="color:var(--text-muted)">' + (i+1) + '</td>' +
+      '<td class="st-name">' + s.n + '</td>' +
+      '<td class="st-monto">' + fmt(s.pef) + '</td>' +
+      '<td class="st-pct">' + pct.toFixed(1) + '%</td>' +
+      '<td class="state-bar-cell"><div class="state-bar-track"><div class="state-bar-fill" style="width:' + barW.toFixed(1) + '%"></div></div></td>' +
+      '<td><span class="state-heat ' + heatClass + '">' + fmtPc(pc) + '</span></td>' +
+      '</tr>';
+  });
+
+  // Total row
+  html += '<tr class="state-total-row">' +
+    '<td></td><td>Total nacional</td>' +
+    '<td class="st-monto">' + fmt(totalPef) + '</td>' +
+    '<td class="st-pct">100%</td>' +
+    '<td></td><td></td></tr>';
+
+  tbody.innerHTML = html;
+}
+
+renderStates();
+</script>
+
+<!-- ══════════════════════ 11. INSTITUCIONES OPACAS ══════════════════════ -->
+<section>
+  <div class="container">
+    <div class="section-num">11 &mdash; Opacidad institucional</div>
     <h2>Las instituciones m&aacute;s <span class="hl">opacas</span></h2>
     <div class="opacity-list">
       <div class="opacity-row">
