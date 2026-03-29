@@ -1520,44 +1520,31 @@ h2 .hl-gold { color: var(--gold); }
   </div>
 </section>
 
-<!-- ══════════════════════ 10. TODOS LOS ESTADOS ══════════════════════ -->
+<!-- ══════════════════════ 10. RADIOGRAFIA POR ESTADO ══════════════════════ -->
 <section>
   <div class="container">
     <div class="section-num">10 &mdash; Los 32 estados</div>
-    <h2>&iquest;Cu&aacute;nto recibe <span class="hl-gold">tu estado</span>?</h2>
+    <h2>Radiograf&iacute;a de <span class="hl-gold">tu estado</span></h2>
     <p class="state-section-intro">
-      Distribuci&oacute;n del Presupuesto de Egresos de la Federaci&oacute;n 2025 por entidad federativa.
-      Incluye participaciones, aportaciones y gasto federalizado.
-      CDMX concentra el 41.5% por ser sede de la mayor&iacute;a de las dependencias federales.
+      An&aacute;lisis de anomal&iacute;as en contratos de CompraNet mapeados a cada entidad federativa.
+      Incluye adjudicaciones directas, fragmentaci&oacute;n, proveedores fantasma y concentraci&oacute;n.
+      Haz clic en un estado para ver su radiograf&iacute;a completa.
     </p>
 
     <div class="state-filter">
-      <button class="active" onclick="sortStates('monto')">Por monto</button>
-      <button onclick="sortStates('percapita')">Per c&aacute;pita (est.)</button>
-      <button onclick="sortStates('alpha')">Alfab&eacute;tico</button>
+      <button class="active" onclick="sortSt('pd')">% Adj. directas</button>
+      <button onclick="sortSt('an')">Anomal&iacute;as</button>
+      <button onclick="sortSt('m')">Monto</button>
+      <button onclick="sortSt('t5')">Concentraci&oacute;n</button>
+      <button onclick="sortSt('al')">Alfab&eacute;tico</button>
     </div>
 
-    <div class="state-table-wrap">
-      <table class="state-table" id="stateTable">
-        <thead>
-          <tr>
-            <th style="width:30px">#</th>
-            <th>Estado</th>
-            <th>Presupuesto PEF</th>
-            <th>% del total</th>
-            <th class="state-bar-cell">Proporci&oacute;n</th>
-            <th>Per c&aacute;pita (est.)</th>
-          </tr>
-        </thead>
-        <tbody id="stateBody"></tbody>
-      </table>
-    </div>
+    <div id="stateCards"></div>
   </div>
 </section>
 
 <script>
-const STATES = [
-  {n:"Ciudad de M\u00e9xico", pef:4478669536258, pop:9209944},
+const ST = [
   {n:"Estado de M\u00e9xico", pef:480872197865, pop:16992418},
   {n:"Veracruz", pef:356445677122, pop:8062579},
   {n:"Jalisco", pef:298597408033, pop:8348151},
@@ -1588,64 +1575,128 @@ const STATES = [
   {n:"Baja California Sur", pef:52799010326, pop:798447},
   {n:"Nayarit", pef:49643384070, pop:1235456},
   {n:"Colima", pef:45538947269, pop:731391},
-  {n:"Tlaxcala", pef:44818412118, pop:1342977}
+  {n:"BAJA CALIFORNIA SUR",c:2466,m:230844898793,pv:954,pd:61.2,dm:141268742579,cf:709,cfm:56969203815,fr:276,fa:151,fam:23906677062,mi:33,mim:4411253380,t5:18.2,an:460,tp:"LABORATORIOS PISA SA DE CV",tpm:13693796336,tpn:89},
+  {n:"MEXICO",c:4824,m:12437670679,pv:1657,pd:34.0,dm:4234613483,cf:1053,cfm:993011904,fr:505,fa:45,fam:1600217873,mi:1,mim:73694501,t5:17.4,an:551,tp:"CENTRO DE ASISTENCIA RENAL SA DE CV",tpm:774427260,tpn:9},
+  {n:"CIUDAD DE MEXICO",c:755,m:8877758970,pv:559,pd:22.9,dm:2031826319,cf:19,cfm:420391653,fr:37,fa:31,fam:1142306008,mi:2,mim:155816543,t5:37.4,an:70,tp:"GRUPO DE SEGURIDAD PRIVADA PRYSE",tpm:925296307,tpn:4},
+  {n:"VERACRUZ",c:901,m:6192166537,pv:579,pd:21.1,dm:1308973951,cf:61,cfm:770184851,fr:59,fa:16,fam:464770918,mi:4,mim:255399050,t5:31.9,an:79,tp:"CONSTRUCCIONES Y REPARACIONES DEL S",tpm:608233543,tpn:2},
+  {n:"GUANAJUATO",c:527,m:4948492912,pv:363,pd:11.6,dm:571937284,cf:28,cfm:2009925,fr:30,fa:8,fam:302224526,mi:0,mim:0,t5:52.1,an:38,tp:"DISTRIBUIDORA INT. DE MEDICAMENTOS",tpm:1036571867,tpn:1},
+  {n:"TABASCO",c:779,m:4214905578,pv:490,pd:47.2,dm:1990172472,cf:56,cfm:1568265223,fr:51,fa:14,fam:1056149457,mi:3,mim:374357747,t5:29.3,an:68,tp:"GRUPO INDUSTRIAL MAYANI SA DE CV",tpm:290257762,tpn:2},
+  {n:"CHIAPAS",c:518,m:3816171727,pv:308,pd:38.7,dm:1477945772,cf:32,cfm:446593523,fr:31,fa:24,fam:680228889,mi:1,mim:63534961,t5:58.9,an:56,tp:"REGIOMONTANA DE CONSTRUCCION",tpm:1573537028,tpn:1},
+  {n:"OAXACA",c:618,m:2479612748,pv:466,pd:69.9,dm:1732484463,cf:125,cfm:975005189,fr:26,fa:19,fam:849740268,mi:3,mim:374571829,t5:42.4,an:48,tp:"IMPULSO MEXICANO SA DE CV",tpm:559709588,tpn:5},
+  {n:"PUEBLA",c:780,m:2438380877,pv:469,pd:58.6,dm:1428428137,cf:60,cfm:1266162797,fr:56,fa:11,fam:906430493,mi:1,mim:727387307,t5:41.9,an:68,tp:"INGENTEC CONSTRUCTORA",tpm:727387307,tpn:1},
+  {n:"QUERETARO",c:1011,m:1974250687,pv:454,pd:23.0,dm:453496285,cf:9,cfm:24199015,fr:82,fa:6,fam:69143701,mi:0,mim:0,t5:36.5,an:88,tp:"MEDICA SANTA CARMEN SAPI DE CV",tpm:408490738,tpn:6},
+  {n:"TAMAULIPAS",c:399,m:1444192586,pv:252,pd:29.0,dm:419330722,cf:22,cfm:389300044,fr:24,fa:11,fam:361734505,mi:1,mim:73510980,t5:26.3,an:36,tp:"CONSTRUCCIONES AYAMONTE SA DE CV",tpm:102741721,tpn:1},
+  {n:"GUERRERO",c:589,m:1400008012,pv:350,pd:42.9,dm:601220905,cf:39,cfm:280613451,fr:40,fa:6,fam:222813378,mi:0,mim:0,t5:33.7,an:46,tp:"ELECTRONICS FOR MEDICINE SA DE CV",tpm:126678444,tpn:1},
+  {n:"HIDALGO",c:939,m:1290031630,pv:603,pd:16.8,dm:216528601,cf:21,cfm:23822927,fr:55,fa:3,fam:29913155,mi:0,mim:0,t5:38.2,an:58,tp:"DESPACHO JURIDICO EMPRESARIAL",tpm:231339370,tpn:3},
+  {n:"YUCATAN",c:1255,m:1220753683,pv:631,pd:45.2,dm:552067446,cf:484,cfm:255480766,fr:139,fa:9,fam:131542119,mi:0,mim:0,t5:25.5,an:148,tp:"MEDICAL LIFE SUPPLY SA DE CV",tpm:182748286,tpn:14},
+  {n:"SONORA",c:467,m:985000832,pv:269,pd:51.9,dm:511325267,cf:52,cfm:342742380,fr:44,fa:5,fam:54222198,mi:0,mim:0,t5:32.0,an:49,tp:"BIODIST S.A. DE C.V.",tpm:136299959,tpn:6},
+  {n:"CHIHUAHUA",c:317,m:850981818,pv:203,pd:3.2,dm:27216795,cf:0,cfm:0,fr:17,fa:0,fam:0,mi:0,mim:0,t5:25.7,an:17,tp:"STAHL CONSTRUCCIONES SA DE CV",tpm:63381680,tpn:5},
+  {n:"CAMPECHE",c:269,m:802158876,pv:190,pd:16.8,dm:135048013,cf:0,cfm:0,fr:14,fa:1,fam:11900911,mi:0,mim:0,t5:25.3,an:15,tp:"TOKA INTERNACIONAL SAPI DE CV",tpm:64837500,tpn:1},
+  {n:"TLAXCALA",c:246,m:791451325,pv:148,pd:75.8,dm:600083353,cf:31,cfm:422085302,fr:24,fa:4,fam:80119115,mi:1,mim:65755655,t5:69.8,an:29,tp:"SERVICIOS MEDICOS Y LABORATORIOS",tpm:233139004,tpn:3},
+  {n:"BAJA CALIFORNIA",c:431,m:791400934,pv:333,pd:17.2,dm:136152943,cf:0,cfm:0,fr:18,fa:3,fam:57165562,mi:1,mim:51300312,t5:25.8,an:22,tp:"REHABILITACION CARRETERA DEL VALLE",tpm:51300312,tpn:1},
+  {n:"NUEVO LEON",c:373,m:739824676,pv:251,pd:19.4,dm:143684523,cf:28,cfm:40033021,fr:20,fa:5,fam:51925607,mi:0,mim:0,t5:24.3,an:25,tp:"SERVICIOS Y EVENTOS HEERDISA",tpm:52308327,tpn:1},
+  {n:"JALISCO",c:426,m:697552662,pv:309,pd:16.0,dm:111553447,cf:1,cfm:9519310,fr:17,fa:1,fam:22612632,mi:0,mim:0,t5:20.6,an:18,tp:"SERVICIOS BROXEL SAPI DE CV",tpm:35410286,tpn:5},
+  {n:"SINALOA",c:132,m:696877203,pv:105,pd:26.4,dm:184028231,cf:24,cfm:175827087,fr:4,fa:8,fam:158822396,mi:0,mim:0,t5:38.0,an:12,tp:"ASTORA INTERNATIONAL GROUP",tpm:89758200,tpn:1},
+  {n:"DURANGO",c:644,m:676044911,pv:192,pd:34.5,dm:233016767,cf:1,cfm:430260,fr:40,fa:3,fam:25410011,mi:0,mim:0,t5:24.9,an:43,tp:"SEGUROS ARGOS SA DE CV",tpm:41991685,tpn:2},
+  {n:"SAN LUIS POTOSI",c:388,m:665487029,pv:181,pd:50.3,dm:334745954,cf:20,cfm:42512702,fr:28,fa:4,fam:58891510,mi:0,mim:0,t5:28.7,an:32,tp:"COMERCIALIZADORA DE REACTIVOS",tpm:75418228,tpn:3},
+  {n:"QUINTANA ROO",c:292,m:605356860,pv:157,pd:74.3,dm:450003899,cf:26,cfm:255210892,fr:21,fa:12,fam:265798349,mi:0,mim:0,t5:43.0,an:33,tp:"FARMALINE DEL SURESTE SA DE CV",tpm:86228666,tpn:1},
+  {n:"COAHUILA",c:297,m:521899834,pv:122,pd:7.5,dm:39021940,cf:0,cfm:0,fr:23,fa:0,fam:0,mi:0,mim:0,t5:30.7,an:23,tp:"HISA FARMACEUTICA SA DE CV",tpm:49500000,tpn:1},
+  {n:"MORELOS",c:315,m:489548001,pv:233,pd:76.8,dm:375920592,cf:29,cfm:316423752,fr:10,fa:10,fam:228458232,mi:0,mim:0,t5:54.2,an:20,tp:"COMERCIALIZADORA MANHOS SA DE CV",tpm:79948718,tpn:2},
+  {n:"MICHOACAN",c:271,m:455160123,pv:194,pd:25.8,dm:117579293,cf:1,cfm:1645044,fr:13,fa:9,fam:68151523,mi:1,mim:64251653,t5:45.9,an:23,tp:"EDIFICACIONES CARVER SA DE CV",tpm:76616865,tpn:1},
+  {n:"COLIMA",c:225,m:399802604,pv:142,pd:69.1,dm:276199895,cf:18,cfm:156342868,fr:20,fa:6,fam:158765566,mi:0,mim:0,t5:43.0,an:26,tp:"PRODUCTOS HOSPITALARIOS SA DE CV",tpm:48287576,tpn:2},
+  {n:"NAYARIT",c:355,m:395759389,pv:184,pd:78.7,dm:311608560,cf:14,cfm:99635731,fr:34,fa:6,fam:166467089,mi:0,mim:0,t5:47.0,an:40,tp:"ADMINISTRADORA ESPECIALIZADA",tpm:51730000,tpn:2},
+  {n:"ZACATECAS",c:182,m:276846392,pv:125,pd:33.6,dm:93052397,cf:11,cfm:49051418,fr:10,fa:6,fam:51180838,mi:0,mim:0,t5:29.6,an:16,tp:"EDENRED MEXICO SA DE CV",tpm:18828686,tpn:3},
+  {n:"AGUASCALIENTES",c:171,m:212301508,pv:140,pd:12.0,dm:25414228,cf:3,cfm:1719896,fr:3,fa:0,fam:0,mi:0,mim:0,t5:31.2,an:3,tp:"PROMOTORA DE VIAS TERRESTRES",tpm:18321722,tpn:3}
 ];
-
-const maxPef = STATES[0].pef;
-let currentSort = 'monto';
 
 function fmt(n) {
   if (n >= 1e12) return '$' + (n/1e12).toFixed(1) + 'B';
   if (n >= 1e9) return '$' + (n/1e9).toFixed(1) + ' mmd';
-  return '$' + (n/1e6).toFixed(0) + 'M';
+  if (n >= 1e6) return '$' + (n/1e6).toFixed(0) + 'M';
+  return '$' + Math.round(n).toLocaleString('es-MX');
 }
 
-function fmtPc(n) { return '$' + Math.round(n).toLocaleString('es-MX'); }
+let curSort = 'pd';
 
-function sortStates(mode) {
-  currentSort = mode;
+function sortSt(key) {
+  curSort = key;
   document.querySelectorAll('.state-filter button').forEach(b => b.classList.remove('active'));
-  event.target.classList.add('active');
-  renderStates();
+  if (event && event.target) event.target.classList.add('active');
+  renderCards();
 }
 
-function renderStates() {
-  let sorted = [...STATES];
-  if (currentSort === 'monto') sorted.sort((a,b) => b.pef - a.pef);
-  else if (currentSort === 'percapita') sorted.sort((a,b) => (b.pef/b.pop) - (a.pef/a.pop));
+function renderCards() {
+  let sorted = [...ST];
+  if (curSort === 'pd') sorted.sort((a,b) => b.pd - a.pd);
+  else if (curSort === 'an') sorted.sort((a,b) => b.an - a.an);
+  else if (curSort === 'm') sorted.sort((a,b) => b.m - a.m);
+  else if (curSort === 't5') sorted.sort((a,b) => b.t5 - a.t5);
   else sorted.sort((a,b) => a.n.localeCompare(b.n, 'es'));
 
-  const totalPef = STATES.reduce((s,x) => s + x.pef, 0);
-  const tbody = document.getElementById('stateBody');
-  let html = '';
+  const maxM = Math.max(...ST.map(s => s.m));
+  let html = '<div style="display:flex;flex-direction:column;gap:12px">';
 
   sorted.forEach((s, i) => {
-    const pct = (s.pef / totalPef * 100);
-    const barW = (s.pef / maxPef * 100);
-    const pc = s.pef / s.pop;
-    const heatClass = pc > 200000 ? 'heat-high' : pc > 60000 ? 'heat-med' : 'heat-low';
+    const barW = (s.m / maxM * 100).toFixed(1);
+    const dirColor = s.pd >= 70 ? 'var(--red)' : s.pd >= 40 ? 'var(--orange)' : 'var(--green)';
+    const anomColor = s.an >= 100 ? 'var(--red)' : s.an >= 40 ? 'var(--orange)' : 'var(--text-dim)';
 
-    html += '<tr>' +
-      '<td style="color:var(--text-muted)">' + (i+1) + '</td>' +
-      '<td class="st-name">' + s.n + '</td>' +
-      '<td class="st-monto">' + fmt(s.pef) + '</td>' +
-      '<td class="st-pct">' + pct.toFixed(1) + '%</td>' +
-      '<td class="state-bar-cell"><div class="state-bar-track"><div class="state-bar-fill" style="width:' + barW.toFixed(1) + '%"></div></div></td>' +
-      '<td><span class="state-heat ' + heatClass + '">' + fmtPc(pc) + '</span></td>' +
-      '</tr>';
+    html += '<div class="opacity-row" style="grid-template-columns:1fr;cursor:pointer" onclick="this.querySelector(\'.st-detail\').style.display=this.querySelector(\'.st-detail\').style.display===\'none\'?\'block\':\'none\'">';
+
+    // Header row
+    html += '<div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:12px;align-items:center">';
+    html += '<div><span class="opacity-name">' + s.n + '</span><br><span style="font-size:0.78rem;color:var(--text-dim)">' + s.c.toLocaleString() + ' contratos &middot; ' + s.pv + ' proveedores</span></div>';
+    html += '<div style="text-align:center"><span style="font-family:JetBrains Mono;font-weight:700;color:' + dirColor + '">' + s.pd + '%</span><br><span style="font-size:0.7rem;color:var(--text-muted)">adj. directas</span></div>';
+    html += '<div style="text-align:center"><span style="font-family:JetBrains Mono;font-weight:700;color:' + anomColor + '">' + s.an + '</span><br><span style="font-size:0.7rem;color:var(--text-muted)">anomal\u00edas</span></div>';
+    html += '<div style="text-align:right"><span class="st-monto">' + fmt(s.m) + '</span><br><span style="font-size:0.7rem;color:var(--text-muted)">monto total</span></div>';
+    html += '</div>';
+
+    // Expandable detail
+    html += '<div class="st-detail" style="display:none;margin-top:16px;padding-top:16px;border-top:1px solid var(--border)">';
+
+    // Adj directa bar
+    html += '<div style="margin-bottom:16px"><div style="font-size:0.8rem;color:var(--text-dim);margin-bottom:4px">Adj. directas: ' + fmt(s.dm) + ' de ' + fmt(s.m) + '</div>';
+    html += '<div style="display:flex;height:24px;border-radius:4px;overflow:hidden">';
+    html += '<div style="flex:' + s.pd + ';background:' + dirColor + ';display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;color:#fff">' + s.pd + '%</div>';
+    html += '<div style="flex:' + (100-s.pd) + ';background:var(--bg)"></div>';
+    html += '</div></div>';
+
+    // Stats grid
+    html += '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:12px">';
+
+    // Fragmentation
+    html += '<div style="background:var(--bg);padding:12px;border-radius:6px"><div style="font-size:0.72rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px">Fragmentaci\u00f3n</div><div style="font-family:Playfair Display;font-size:1.4rem;font-weight:700;color:var(--gold)">' + s.fr + '</div><div style="font-size:0.75rem;color:var(--text-dim)">casos detectados</div></div>';
+
+    // Fantasmas
+    html += '<div style="background:var(--bg);padding:12px;border-radius:6px"><div style="font-size:0.72rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px">Prov. fantasma</div><div style="font-family:Playfair Display;font-size:1.4rem;font-weight:700;color:var(--orange)">' + s.fa + '</div><div style="font-size:0.75rem;color:var(--text-dim)">' + fmt(s.fam) + ' involucrados</div></div>';
+
+    // Caso fortuito
+    html += '<div style="background:var(--bg);padding:12px;border-radius:6px"><div style="font-size:0.72rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px">Caso fortuito</div><div style="font-family:Playfair Display;font-size:1.4rem;font-weight:700;color:var(--red)">' + s.cf + '</div><div style="font-size:0.75rem;color:var(--text-dim)">' + fmt(s.cfm) + '</div></div>';
+
+    // Concentracion
+    html += '<div style="background:var(--bg);padding:12px;border-radius:6px"><div style="font-size:0.72rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px">Top 5 acaparan</div><div style="font-family:Playfair Display;font-size:1.4rem;font-weight:700;color:var(--cyan)">' + s.t5 + '%</div><div style="font-size:0.75rem;color:var(--text-dim)">del gasto estatal</div></div>';
+
+    // MICRO
+    if (s.mi > 0) {
+      html += '<div style="background:var(--bg);padding:12px;border-radius:6px;border-left:3px solid var(--orange)"><div style="font-size:0.72rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px">Empresas MICRO</div><div style="font-family:Playfair Display;font-size:1.4rem;font-weight:700;color:var(--orange)">' + s.mi + '</div><div style="font-size:0.75rem;color:var(--text-dim)">' + fmt(s.mim) + ' en contratos</div></div>';
+    }
+
+    html += '</div>';
+
+    // Top proveedor
+    if (s.tp) {
+      html += '<div style="font-size:0.82rem;color:var(--text-dim);padding:8px 0">Top proveedor: <strong style="color:var(--text)">' + s.tp + '</strong> &mdash; ' + fmt(s.tpm) + ' en ' + s.tpn + ' contratos</div>';
+    }
+
+    html += '</div>'; // st-detail
+    html += '</div>'; // opacity-row
   });
 
-  // Total row
-  html += '<tr class="state-total-row">' +
-    '<td></td><td>Total nacional</td>' +
-    '<td class="st-monto">' + fmt(totalPef) + '</td>' +
-    '<td class="st-pct">100%</td>' +
-    '<td></td><td></td></tr>';
-
-  tbody.innerHTML = html;
+  html += '</div>';
+  document.getElementById('stateCards').innerHTML = html;
 }
 
-renderStates();
+renderCards();
 </script>
 
 <!-- ══════════════════════ 11. INSTITUCIONES OPACAS ══════════════════════ -->
