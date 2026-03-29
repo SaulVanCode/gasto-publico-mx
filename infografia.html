@@ -280,6 +280,22 @@ h2 .hl-gold { color: var(--gold); }
   margin-top: 4px;
 }
 
+/* ── CALLOUT CYAN ── */
+.callout-cyan {
+  background: rgba(72, 202, 228, 0.08);
+  border: 1px solid var(--cyan-dark);
+  border-left: 4px solid var(--cyan);
+  padding: 20px 24px;
+  border-radius: 0 8px 8px 0;
+  font-size: 0.92rem;
+  color: var(--cyan);
+  line-height: 1.7;
+}
+
+.callout-cyan strong {
+  color: var(--text);
+}
+
 /* ── HORIZONTAL BAR CHART ── */
 .hbar-chart { margin-top: 16px; }
 
@@ -533,6 +549,114 @@ h2 .hl-gold { color: var(--gold); }
 
 .emer-callout span { color: var(--text-dim); font-size: 0.9rem; font-weight: 400; display: block; }
 
+/* ── COMPARISON ROWS ── */
+.compare-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.compare-row {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 20px 24px;
+  display: grid;
+  grid-template-columns: 1fr auto auto auto;
+  gap: 16px;
+  align-items: center;
+  transition: border-color 0.3s;
+}
+
+.compare-row:hover { border-color: var(--cyan-dark); }
+
+@media (max-width: 700px) {
+  .compare-row {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+}
+
+.compare-label {
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.compare-old {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.9rem;
+  color: var(--text-dim);
+  text-align: right;
+}
+
+.compare-arrow {
+  font-size: 1.2rem;
+  color: var(--text-muted);
+}
+
+.compare-new {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-align: right;
+}
+
+.compare-delta {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 4px;
+  margin-left: 8px;
+}
+
+.delta-up {
+  color: var(--red);
+  background: var(--red-glow);
+}
+
+.delta-down {
+  color: var(--green);
+  background: rgba(82, 183, 136, 0.15);
+}
+
+/* ── EMERGENCY BREAKDOWN BAR ── */
+.emer-breakdown {
+  margin: 24px 0;
+}
+
+.emer-bar-wrap {
+  display: flex;
+  height: 48px;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+
+.emer-bar-seg {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: #fff;
+}
+
+.emer-bar-legend {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.emer-bar-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.88rem;
+}
+
 /* ── MICRO CARDS ── */
 .micro-grid {
   display: grid;
@@ -576,6 +700,13 @@ h2 .hl-gold { color: var(--gold); }
 }
 
 .micro-info .micro-detail { font-size: 0.8rem; color: var(--text-dim); margin-top: 4px; }
+
+.micro-info .micro-rfc {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
 
 /* ── CDMX DONUT ── */
 .cdmx-layout {
@@ -807,6 +938,7 @@ h2 .hl-gold { color: var(--gold); }
     border-color: #ddd;
   }
   .callout-red { background: #fff0f0; }
+  .callout-cyan { background: #f0fffe; }
   section { break-inside: avoid; }
 }
 </style>
@@ -820,8 +952,8 @@ h2 .hl-gold { color: var(--gold); }
     <h1>Radiografia del <span class="accent">Gasto Publico</span><br>en Mexico 2025</h1>
     <p class="hero-sub">
       Analisis de <strong>91,850 contratos</strong> y <strong>$707.8 mil millones MXN</strong>
-      en CompraNet &mdash; rastreando cada peso desde el Presupuesto de Egresos
-      hasta el ultimo contrato.
+      en CompraNet &mdash; con comparativa 2024 vs 2025 para rastrear como evoluciona
+      cada peso del Presupuesto de Egresos.
     </p>
   </div>
 </header>
@@ -851,10 +983,53 @@ h2 .hl-gold { color: var(--gold); }
   </div>
 </section>
 
-<!-- ══════════════════════ 02. COMO SE CONTRATA ══════════════════════ -->
+<!-- ══════════════════════ 02. COMPARATIVA 2024 vs 2025 ══════════════════════ -->
 <section>
   <div class="container">
-    <div class="section-num">02 &mdash; Como se contrata</div>
+    <div class="section-num">02 &mdash; 2024 vs 2025</div>
+    <h2>La <span class="hl">tendencia</span>: menos contratos, mas dinero</h2>
+    <div class="compare-grid">
+      <div class="compare-row">
+        <div class="compare-label">Contratos totales</div>
+        <div class="compare-old">143,542</div>
+        <div class="compare-arrow">&rarr;</div>
+        <div class="compare-new">91,850 <span class="compare-delta delta-down">-36%</span></div>
+      </div>
+      <div class="compare-row">
+        <div class="compare-label">Monto total</div>
+        <div class="compare-old">$402.6 mmd</div>
+        <div class="compare-arrow">&rarr;</div>
+        <div class="compare-new">$707.8 mmd <span class="compare-delta delta-up">+75.8%</span></div>
+      </div>
+      <div class="compare-row">
+        <div class="compare-label">Caso fortuito</div>
+        <div class="compare-old">$27.6 mmd</div>
+        <div class="compare-arrow">&rarr;</div>
+        <div class="compare-new">$106.2 mmd <span class="compare-delta delta-up">+285%</span></div>
+      </div>
+      <div class="compare-row">
+        <div class="compare-label">Concentracion top 500</div>
+        <div class="compare-old">60.2%</div>
+        <div class="compare-arrow">&rarr;</div>
+        <div class="compare-new">79.9% <span class="compare-delta delta-up">+19.7pp</span></div>
+      </div>
+      <div class="compare-row">
+        <div class="compare-label">Proveedores unicos</div>
+        <div class="compare-old">38,139</div>
+        <div class="compare-arrow">&rarr;</div>
+        <div class="compare-new">30,703 <span class="compare-delta delta-down">-19.5%</span></div>
+      </div>
+    </div>
+    <div class="callout-red" style="margin-top: 28px;">
+      Menos contratos, mas dinero, menos proveedores. El mercado se esta cerrando.
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════ 03. COMO SE CONTRATA ══════════════════════ -->
+<section>
+  <div class="container">
+    <div class="section-num">03 &mdash; Como se contrata</div>
     <h2>La mitad del dinero se asigna <span class="hl">sin competencia</span></h2>
     <div class="contrata-wrap">
       <div class="stacked-bar">
@@ -884,10 +1059,10 @@ h2 .hl-gold { color: var(--gold); }
   </div>
 </section>
 
-<!-- ══════════════════════ 03. TOP PROVEEDORES ══════════════════════ -->
+<!-- ══════════════════════ 04. TOP PROVEEDORES ══════════════════════ -->
 <section>
   <div class="container">
-    <div class="section-num">03 &mdash; Proveedores</div>
+    <div class="section-num">04 &mdash; Proveedores</div>
     <h2>Top 10 por <span class="hl">adjudicacion directa</span></h2>
     <div class="hbar-chart">
       <div class="hbar-row">
@@ -942,16 +1117,15 @@ h2 .hl-gold { color: var(--gold); }
       </div>
     </div>
     <div class="chart-note">
-      Todos son laboratorios farmaceuticos. Justificacion legal predominante:
-      &laquo;patentes, licencias, oferente unico u obras de arte&raquo; (Art. 41 LAASSP).
+      Todos son laboratorios farmaceuticos con patentes vigentes. La adjudicacion directa tiene fundamento legal (Art. 41 LAASSP &mdash; oferente unico). Este patron es similar en sistemas de salud de todo el mundo. La pregunta no es si es legal, sino si el volumen es eficiente.
     </div>
   </div>
 </section>
 
-<!-- ══════════════════════ 04. CONCENTRACION ══════════════════════ -->
+<!-- ══════════════════════ 05. CONCENTRACION ══════════════════════ -->
 <section>
   <div class="container">
-    <div class="section-num">04 &mdash; Concentracion</div>
+    <div class="section-num">05 &mdash; Concentracion</div>
     <h2>El dinero se concentra en <span class="hl-gold">pocas manos</span></h2>
     <div class="pyramid-wrap">
       <div class="pyramid-level pyr-1">Top 20 &rarr; 25.9%</div>
@@ -961,13 +1135,16 @@ h2 .hl-gold { color: var(--gold); }
     </div>
     <div class="pyramid-caption">500 empresas se llevan el 80% del dinero</div>
     <div class="pyramid-sub">De los 30,703 proveedores registrados en CompraNet 2025</div>
+    <div class="chart-note" style="margin-top: 24px;">
+      En 2024, el top 500 concentraba 60.2%. En un solo ano subio a 79.9%.
+    </div>
   </div>
 </section>
 
-<!-- ══════════════════════ 05. ANOMALIAS ══════════════════════ -->
+<!-- ══════════════════════ 06. ANOMALIAS ══════════════════════ -->
 <section>
   <div class="container">
-    <div class="section-num">05 &mdash; Anomalias detectadas</div>
+    <div class="section-num">06 &mdash; Anomalias detectadas</div>
     <h2><span class="hl">Red flags</span> en los datos</h2>
     <div class="anom-header">
       <div class="anom-big">612</div>
@@ -1008,15 +1185,56 @@ h2 .hl-gold { color: var(--gold); }
   </div>
 </section>
 
-<!-- ══════════════════════ 06. EMERGENCIAS ══════════════════════ -->
+<!-- ══════════════════════ 07. EMERGENCIAS ══════════════════════ -->
 <section>
   <div class="container">
-    <div class="section-num">06 &mdash; Emergencias</div>
-    <h2>&laquo;Caso fortuito o fuerza mayor&raquo; = <span class="hl">$86 mil millones</span></h2>
+    <div class="section-num">07 &mdash; Emergencia permanente</div>
+    <h2>Emergencia permanente: <span class="hl">$106 mil millones</span> en &laquo;caso fortuito&raquo;</h2>
     <div class="emer-callout">
       7,303 contratos justificados como emergencia
-      <span>12.2% del gasto total de CompraNet</span>
+      <span>15% del gasto total de CompraNet</span>
     </div>
+
+    <!-- Breakdown bar -->
+    <div class="emer-breakdown">
+      <div style="margin-top:24px; margin-bottom:8px; font-weight:700; font-size:1rem;">Distribucion del gasto de emergencia</div>
+      <div class="emer-bar-wrap">
+        <div class="emer-bar-seg" style="flex:88; background: var(--red);">88%</div>
+        <div class="emer-bar-seg" style="flex:2.3; background: var(--gold); font-size:0.65rem;">2.3%</div>
+        <div class="emer-bar-seg" style="flex:9.7; background: var(--text-muted); font-size:0.75rem;">9.7%</div>
+      </div>
+      <div class="emer-bar-legend">
+        <div class="emer-bar-legend-item">
+          <div class="legend-dot" style="background:var(--red)"></div>
+          Salud (medicamentos, hospitales, servicios medicos) &mdash; 88%
+        </div>
+        <div class="emer-bar-legend-item">
+          <div class="legend-dot" style="background:var(--gold)"></div>
+          Obra publica &mdash; 2.3%
+        </div>
+        <div class="emer-bar-legend-item">
+          <div class="legend-dot" style="background:var(--text-muted)"></div>
+          Otros &mdash; 9.7%
+        </div>
+      </div>
+    </div>
+
+    <!-- Year comparison -->
+    <div class="compare-grid" style="margin-bottom: 28px;">
+      <div class="compare-row">
+        <div class="compare-label">Gasto en caso fortuito</div>
+        <div class="compare-old">2024: $27.6 mmd</div>
+        <div class="compare-arrow">&rarr;</div>
+        <div class="compare-new">2025: $106.2 mmd <span class="compare-delta delta-up">+285%</span></div>
+      </div>
+    </div>
+
+    <!-- Context callout (cyan) -->
+    <div class="callout-cyan" style="margin-bottom: 28px;">
+      <strong>Contexto:</strong> La transicion INSABI &rarr; IMSS-Bienestar (2023-2024) genero desabasto documentado de medicamentos. Muchas de estas compras de emergencia buscan cubrir ese deficit. La pregunta es por que, despues de 6 anos, el sistema sigue sin poder planear sus compras.
+    </div>
+
+    <!-- Top 5 table -->
     <table class="emer-table">
       <thead>
         <tr><th>#</th><th>Proveedor</th><th>Monto</th><th>Institucion</th></tr>
@@ -1057,16 +1275,17 @@ h2 .hl-gold { color: var(--gold); }
   </div>
 </section>
 
-<!-- ══════════════════════ 07. MICRO ══════════════════════ -->
+<!-- ══════════════════════ 08. MICRO ══════════════════════ -->
 <section>
   <div class="container">
-    <div class="section-num">07 &mdash; Red flag</div>
+    <div class="section-num">08 &mdash; Red flag</div>
     <h2>Empresas <span class="hl-gold">MICRO</span> con contratos gigantes</h2>
     <div class="micro-grid">
       <div class="micro-card">
         <div class="micro-badge">MICRO</div>
         <div class="micro-info">
           <h4>Comercializadora de Seguridad Privada</h4>
+          <div class="micro-rfc">Constituida 2015</div>
           <div class="micro-monto">$4,342M</div>
           <div class="micro-detail">CONAGUA &mdash; servicio de vigilancia a inmuebles</div>
         </div>
@@ -1075,30 +1294,40 @@ h2 .hl-gold { color: var(--gold); }
         <div class="micro-badge">MICRO</div>
         <div class="micro-info">
           <h4>Ingentec Constructora</h4>
+          <div class="micro-rfc">Constituida 2011</div>
           <div class="micro-monto">$727M</div>
-          <div class="micro-detail">CAPUFE &mdash; emergencia por deslizamiento, adj. directa</div>
+          <div class="micro-detail">CAPUFE &mdash; adj. directa emergencia, deslizamiento</div>
         </div>
       </div>
       <div class="micro-card">
         <div class="micro-badge">MICRO</div>
         <div class="micro-info">
-          <h4>Servicios de Bioseguridad Sanitaria</h4>
-          <div class="micro-monto">$645M</div>
-          <div class="micro-detail">IMSS-Bienestar &mdash; sanitizacion de hospitales</div>
+          <h4>Collective Sublackeyes</h4>
+          <div class="micro-rfc">Constituida 2022</div>
+          <div class="micro-monto">$237M</div>
+          <div class="micro-detail">IMSS &mdash; transporte aereo</div>
+        </div>
+      </div>
+      <div class="micro-card">
+        <div class="micro-badge">MICRO</div>
+        <div class="micro-info">
+          <h4>Grupo Industrial Mayani</h4>
+          <div class="micro-rfc">Constituida 2023</div>
+          <div class="micro-monto">$205M</div>
+          <div class="micro-detail">Adj. directa urgencia &mdash; aires acondicionados</div>
         </div>
       </div>
     </div>
     <div class="chart-note">
-      Empresas clasificadas como &laquo;micro&raquo; en el RUPC (Registro Unico de Proveedores y Contratistas)
-      recibiendo contratos de cientos de millones de pesos.
+      Las patentes farmaceuticas explican las adjudicaciones directas a laboratorios. No explican que una empresa de 2 anos clasificada como micro reciba $205M por urgencia para mantenimiento de aires acondicionados.
     </div>
   </div>
 </section>
 
-<!-- ══════════════════════ 08. CDMX ══════════════════════ -->
+<!-- ══════════════════════ 09. CDMX ══════════════════════ -->
 <section>
   <div class="container">
-    <div class="section-num">08 &mdash; Ciudad de Mexico</div>
+    <div class="section-num">09 &mdash; Ciudad de Mexico</div>
     <h2>CDMX: &iquest;a donde va <span class="hl-cyan">el dinero</span>?</h2>
     <div class="cdmx-layout">
       <div class="donut-wrap">
@@ -1168,10 +1397,10 @@ h2 .hl-gold { color: var(--gold); }
   </div>
 </section>
 
-<!-- ══════════════════════ 09. INSTITUCIONES OPACAS ══════════════════════ -->
+<!-- ══════════════════════ 10. INSTITUCIONES OPACAS ══════════════════════ -->
 <section>
   <div class="container">
-    <div class="section-num">09 &mdash; Opacidad institucional</div>
+    <div class="section-num">10 &mdash; Opacidad institucional</div>
     <h2>Las instituciones mas <span class="hl">opacas</span></h2>
     <div class="opacity-list">
       <div class="opacity-row">
@@ -1225,7 +1454,11 @@ h2 .hl-gold { color: var(--gold); }
       </div>
       <div class="source-item">
         <div class="src-dot"></div>
-        <div><strong>CompraNet / ComprasMX</strong><br>upcp-compranet.buengobierno.gob.mx &mdash; Contratos 2025 (CSV, 110 MB)</div>
+        <div><strong>CompraNet / ComprasMX</strong><br>upcp-compranet.buengobierno.gob.mx &mdash; Contratos 2025 (CSV, 110 MB, 91,850 contratos)</div>
+      </div>
+      <div class="source-item">
+        <div class="src-dot"></div>
+        <div><strong>CompraNet / ComprasMX</strong><br>Contratos CompraNet 2024 (CSV, 168 MB, 143,542 contratos)</div>
       </div>
       <div class="source-item">
         <div class="src-dot"></div>
@@ -1248,9 +1481,9 @@ h2 .hl-gold { color: var(--gold); }
       <strong>Metodologia:</strong> Datos descargados y procesados automaticamente mediante crawlers
       de codigo abierto. Las anomalias fueron detectadas por algoritmos estadisticos
       (z-score, frecuencia, concentracion). <strong>Este analisis no implica ilegalidad</strong> &mdash;
-      senala patrones que merecen escrutinio publico. Los datos son una fotografia del
-      estado de CompraNet al momento de la descarga y pueden diferir de cifras oficiales
-      consolidadas.
+      las adjudicaciones directas a farmaceuticas tienen fundamento legal en patentes vigentes,
+      y las compras de emergencia en salud tienen contexto en la transicion INSABI-IMSS Bienestar.
+      Sin embargo, hay patrones que no se explican por estas justificaciones y que merecen escrutinio publico.
     </div>
   </div>
 </section>
